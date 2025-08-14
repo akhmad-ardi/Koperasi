@@ -312,85 +312,52 @@ return [
 
         // Sidebar items:
         [
-            'type' => 'sidebar-menu-search',
-            'text' => 'search',
+            'text' => 'Dashboard',
+            'url' => 'admin/dashboard',
+            'icon' => 'fas fa-fw fa-home',
         ],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
-            'can' => 'manage-blog',
+            'text' => 'Sekolah',
+            'url' => 'admin/sekolah',
+            'icon' => 'fas fa-fw fa-school',
         ],
         [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
-        ],
-        ['header' => 'account_settings'],
-        [
-            'text' => 'profile',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
+            'text' => 'Anggota',
+            'url' => 'admin/anggota',
+            'icon' => 'fas fa-fw fa-users',
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
-            'icon' => 'fas fa-fw fa-lock',
+            'text' => 'Simpanan',
+            'url' => 'admin/simpanan',
+            'icon' => 'fas fa-fw fa-building',
         ],
         [
-            'text' => 'multilevel',
+            'text' => 'Pinjaman',
+            'url' => 'admin/pinjaman',
+            'icon' => 'fas fa-fw fa-building',
+        ],
+        [
+            'text' => 'Penarikan',
+            'url' => 'admin/penarikan',
+            'icon' => 'fas fa-fw fa-building',
+        ],
+        [
+            'text' => 'Laporan',
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'Laporan Simpanan',
+                    'url' => 'admin/laporan/simpanan',
                 ],
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
-                    'submenu' => [
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                        ],
-                        [
-                            'text' => 'level_two',
-                            'url' => '#',
-                            'submenu' => [
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                                [
-                                    'text' => 'level_three',
-                                    'url' => '#',
-                                ],
-                            ],
-                        ],
-                    ],
+                    'text' => 'Laporan Pinjaman',
+                    'url' => 'admin/laporan/pinjaman',
                 ],
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'Laporan Penarikan',
+                    'url' => 'admin/laporan/penarikan',
                 ],
             ],
-        ],
-        ['header' => 'labels'],
-        [
-            'text' => 'important',
-            'icon_color' => 'red',
-            'url' => '#',
-        ],
-        [
-            'text' => 'warning',
-            'icon_color' => 'yellow',
-            'url' => '#',
-        ],
-        [
-            'text' => 'information',
-            'icon_color' => 'cyan',
-            'url' => '#',
         ],
     ],
 
