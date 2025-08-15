@@ -23,9 +23,7 @@ class AngsuranFactory extends Factory
             'tgl_angsuran' => $this->faker->date(),
             'jumlah_angsuran' => $this->faker->numberBetween(500000, 2000000),
             'jasa' => $this->faker->numberBetween(50000, 200000),
-            'tunggakan_jasa' => $this->faker->numberBetween(0, 50000),
             'total_angsuran' => $this->faker->numberBetween(550000, 2200000),
-            'sisa_pinjaman' => $this->faker->numberBetween(0, 5000000),
             'status' => $this->faker->randomElement(['lunas', 'belum lunas']),
         ];
     }

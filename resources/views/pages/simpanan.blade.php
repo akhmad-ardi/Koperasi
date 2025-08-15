@@ -151,7 +151,13 @@
 @stop
 
 @section('js')
-    <script>
-        console.log('Dashboard Loaded');
-    </script>
+    @if (session('msg_success'))
+        <script>
+            toastr.success("{{ session('msg_success') }}", {
+                timeOut: 3000,
+                closeButton: true,
+                progressBar: true
+            });
+        </script>
+    @endif
 @stop

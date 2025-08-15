@@ -32,9 +32,9 @@ class DatabaseSeeder extends Seeder
         Sekolah::factory(3)
             ->has(
                 Anggota::factory(3)
-                    ->has(Simpanan::factory(3))
-                    ->has(Pinjaman::factory(3)->has(Angsuran::factory(3)))
-                    ->has(Penarikan::factory(3))
+                    ->has(Simpanan::factory(1))
+                    ->has(Pinjaman::factory(1)->has(Angsuran::factory(1)))
+                    ->has(Penarikan::factory(1))
             )->create();
     }
 }

@@ -231,22 +231,93 @@ class AdminController extends Controller
 
     public function HalamanPinjaman()
     {
-        return view("pages.pinjaman");
+        $pinjaman = Pinjaman::all();
+
+        $pinjaman = $pinjaman->sortByDesc('tgl_pinjaman');
+
+        foreach ($pinjaman as $p) {
+            $p->jumlah_pinjaman = Helper::stringToRupiah($p->jumlah_pinjaman);
+            $p->tgl_pinjaman = Helper::getTanggalAttribute($p->tgl_pinjaman);
+        }
+
+        return view("pages.pinjaman", [
+            'pinjaman' => $pinjaman
+        ]);
     }
 
     public function HalamanTambahPinjaman()
     {
-        return view('pages.tambah-pinjaman');
+        $anggota = Anggota::all();
+
+        return view('pages.tambah-pinjaman', [
+            'anggota' => $anggota
+        ]);
+    }
+
+    public function TambahPinjaman(Request $request)
+    {
+        $validated = $request->validate([
+            'id_anggota' => 'required|exists:anggota,id',
+            'tgl_pinjaman' => 'required|date',
+            'jaminan' => 'nullable|string|max:255',
+            'jumlah_pinjaman' => 'required|numeric|min:1',
+        ]);
+
+        Pinjaman::create($validated);
+
+        return redirect()
+            ->route('admin.pinjaman')
+            ->with('msg_success', 'Pinjaman Berhasil Ditambahkan');
+    }
+
+    public function HalamanDetailPinjaman(string $id)
+    {
+        $detail_pinjaman = Pinjaman::where('id', '=', $id)->first();
+
+        $detail_pinjaman->angsuran = $detail_pinjaman->angsuran->sortByDesc('tgl_angsuran');
+
+        foreach ($detail_pinjaman->angsuran as $a) {
+            $a->tgl_angsuran = Helper::getTanggalAttribute($a->tgl_angsuran);
+            $a->jumlah_angsuran = Helper::stringToRupiah($a->jumlah_angsuran);
+            $a->total_angsuran = Helper::stringToRupiah($a->total_angsuran);
+            $a->jasa = Helper::stringToRupiah($a->jasa);
+        }
+
+        return view("pages.angsuran", [
+            'detail_pinjaman' => $detail_pinjaman
+        ]);
+    }
+
+    public function HalamTambahAngsuran()
+    {
+        $anggota = Anggota::all();
+
+        return view('pages.tambah-angsuran', [
+            'anggota' => $anggota
+        ]);
     }
 
     public function HalamanPenarikan()
     {
-        return view('pages.penarikan');
+        $penarikan = Penarikan::all();
+
+        foreach ($penarikan as $p) {
+            $p->tgl_penarikan = Helper::getTanggalAttribute($p->tgl_penarikan);
+            $p->jumlah_penarikan = Helper::stringToRupiah($p->jumlah_penarikan);
+        }
+
+        return view('pages.penarikan', [
+            'penarikan' => $penarikan
+        ]);
     }
 
     public function HalamanTambahPenarikan()
     {
-        return view('pages.tambah-penarikan');
+        $anggota = Anggota::all();
+
+        return view('pages.tambah-penarikan', [
+            'anggota' => $anggota
+        ]);
     }
 
     public function HalamanLaporanSimpanan()

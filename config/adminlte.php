@@ -159,7 +159,7 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
+    'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
     'layout_dark_mode' => null,
@@ -337,6 +337,11 @@ return [
         [
             'text' => 'Pinjaman',
             'url' => 'admin/pinjaman',
+            'icon' => 'fas fa-fw fa-hand-holding-usd',
+        ],
+        [
+            'text' => 'Angsuran',
+            'url' => 'admin/angsuran',
             'icon' => 'fas fa-fw fa-hand-holding-usd',
         ],
         [

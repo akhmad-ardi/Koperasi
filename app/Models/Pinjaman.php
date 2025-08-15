@@ -23,8 +23,6 @@ class Pinjaman extends Model
         'id_anggota',
         'tgl_pinjaman',
         'jumlah_pinjaman',
-        'jasa',
-        'total_pinjaman',
         'jaminan',
         'status',
     ];

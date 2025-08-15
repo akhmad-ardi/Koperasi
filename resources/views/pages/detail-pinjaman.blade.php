@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Pinjaman')
+@section('title', 'Penarikan')
 
 @section('content_header')
-    <h1>Data Pinjaman</h1>
+    <h1>Data Penarikan</h1>
 @stop
 
 @section('content')
@@ -13,7 +13,7 @@
 
     <div class="row mb-3">
         <div class="col">
-            <a href="{{ route('admin.tambah-pinjaman') }}" class="btn btn-primary">
+            <a href="{{ route('admin.tambah-penarikan') }}" class="btn btn-primary">
                 <i class="fas fa-fw fa-plus"></i>
                 Tambah Data
             </a>
@@ -28,56 +28,31 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Nomor</th>
+                                <th class="text-center">Angsuran Ke</th>
                                 <th class="text-center">No. Anggota</th>
                                 <th class="text-center">Nama</th>
-                                <th class="text-center">Tanggal Pinjaman</th>
-                                <th class="text-center">Jumlah Pinjaman</th>
-                                <th class="text-center">Jaminan</th>
-                                <th class="text-center">Status</th>
+                                <th class="text-center">Tanggal Angsuran</th>
+                                <th class="text-center">Jumlah Angsuran</th>
+                                <th class="text-center">Jasa</th>
+                                <th class="text-center">Total Angsuran</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pinjaman as $p)
+                            @foreach ($angsuran as $a)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $p->anggota->no_anggota }}</td>
-                                    <td>{{ $p->anggota->nama }}</td>
-                                    <td>{{ $p->tgl_pinjaman }}</td>
-                                    <td>{{ $p->jumlah_pinjaman }}</td>
-                                    <td>{{ $p->jaminan }}</td>
-                                    <td>{{ $p->status }}</td>
-                                    <td class="text-center d-flex flex-wrap justify-content-center">
-                                        {{-- Detail --}}
-                                        <x-adminlte-button label="Detail" theme="info" icon="fas fa-fw fa-user"
-                                            data-toggle="modal" data-target="#modalDetail" class="mr-1" />
-
-                                        <x-adminlte-modal id="modalDetail" title="Detail Data" theme="info"
-                                            icon="fas fa-fw fa-user" size='md'>
-                                            <form action="">
-                                                <div class="mb-3 text-left">
-                                                    <x-adminlte-input name="nama" label="Nama Sekolah"
-                                                        placeholder="Nama Sekolah" />
-                                                </div>
-                                                <div class="mb-3 text-left">
-                                                    <x-adminlte-input name="alamat" label="Alamat Sekolah"
-                                                        placeholder="Alamat Sekolah" />
-                                                </div>
-                                                <x-slot name="footerSlot">
-                                                    <x-adminlte-button type="button" theme="outline-primary"
-                                                        label="Batal Edit" data-dismiss="modal" />
-                                                    <x-adminlte-button type="submit" theme="primary"
-                                                        icon="fas fa-fw fa-trash" label="Simpan Edit" />
-                                                </x-slot>
-                                            </form>
-                                        </x-adminlte-modal>
-
-                                        {{-- Unduh --}}
-                                        <x-adminlte-button label="Unduh" theme="success" icon="fas fa-fw fa-download" />
-
+                                    <td>{{ $a->angsuran_ke }}</td>
+                                    <td>{{ $a->pinjaman->anggota->no_anggota }}</td>
+                                    <td>{{ $a->pinjaman->anggota->nama }}</td>
+                                    <td>{{ $a->tgl_angsuran }}</td>
+                                    <td>{{ $a->jumlah_angsuran }}</td>
+                                    <td>{{ $a->jasa }}</td>
+                                    <td>{{ $a->total_angsuran }}</td>
+                                    <td class="text-center">
                                         {{-- Edit --}}
                                         <x-adminlte-button label="Edit" theme="primary" icon="fas fa-fw fa-pen"
-                                            data-toggle="modal" data-target="#modalEdit" class="mt-1 mr-1" />
+                                            data-toggle="modal" data-target="#modalEdit" />
 
                                         <x-adminlte-modal id="modalEdit" title="Edit Data" theme="primary"
                                             icon="fas fa-fw fa-pen" size='md'>
@@ -101,7 +76,7 @@
 
                                         {{-- Hapus --}}
                                         <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
-                                            data-toggle="modal" data-target="#modalHapus" class="mt-1" />
+                                            data-toggle="modal" data-target="#modalHapus" />
 
                                         <x-adminlte-modal id="modalHapus" title="Hapus Data" theme="danger"
                                             icon="fas fa-fw fa-trash" size='md'>
@@ -131,13 +106,7 @@
 @stop
 
 @section('js')
-    @if (session('msg_success'))
-        <script>
-            toastr.success("{{ session('msg_success') }}", {
-                timeOut: 3000,
-                closeButton: true,
-                progressBar: true
-            });
-        </script>
-    @endif
+    <script>
+        console.log('Dashboard Loaded');
+    </script>
 @stop

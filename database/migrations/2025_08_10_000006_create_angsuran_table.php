@@ -17,9 +17,7 @@ return new class extends Migration {
             $table->date('tgl_angsuran');
             $table->integer('jumlah_angsuran');
             $table->integer('jasa');
-            $table->integer('tunggakan_jasa');
             $table->integer('total_angsuran');
-            $table->integer('sisa_pinjaman');
             $table->string('status', 20);
 
             $table->foreign('id_pinjaman')->references('id')->on('pinjaman')->onDelete('cascade');

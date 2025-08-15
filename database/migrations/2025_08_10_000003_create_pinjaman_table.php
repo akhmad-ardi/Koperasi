@@ -15,10 +15,8 @@ return new class extends Migration {
             $table->unsignedBigInteger('id_anggota');
             $table->date('tgl_pinjaman');
             $table->integer('jumlah_pinjaman');
-            $table->integer('jasa');
-            $table->integer('total_pinjaman');
             $table->string('jaminan', 50);
-            $table->string('status');
+            $table->enum('status', ['lunas', 'belum lunas'])->default('lunas');
 
             $table->foreign('id_anggota')->references('id')->on('anggota')->onDelete('cascade');
         });

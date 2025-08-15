@@ -18,9 +18,7 @@ class Angsuran extends Model
         'tgl_angsuran',
         'jumlah_angsuran',
         'jasa',
-        'tunggakan_jasa',
         'total_angsuran',
-        'sisa_pinjaman',
         'status'
     ];
 

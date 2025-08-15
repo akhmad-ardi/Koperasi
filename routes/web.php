@@ -69,16 +69,12 @@ Route::prefix("admin")
         Route::prefix("pinjaman")->group(function () {
             Route::get("", [AdminController::class, "HalamanPinjaman"])->name("admin.pinjaman");
 
+            Route::get("/detail/{id}", [AdminController::class, "HalamanDetailPinjaman"])->name("admin.pinjaman");
+
             Route::get("/tambah", [AdminController::class, "HalamanTambahPinjaman"])->name("admin.tambah-pinjaman");
-        });
+            Route::post('/tambah', [AdminController::class, 'TambahPinjaman'])->name('post.tambah-pinjaman');
 
-        /**
-         * Angsuran
-         */
-        Route::prefix("angsuran")->group(function () {
-            Route::get("", [])->name("admin.angsuran");
 
-            Route::get("/tambah", [])->name("admin.tambah-angsuran");
         });
 
         /**
