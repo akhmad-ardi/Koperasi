@@ -31,6 +31,10 @@ Route::prefix("admin")->group(function () {
         Route::get("", [AdminController::class, "HalamanSekolah"])->name("admin.sekolah");
 
         Route::get("/tambah", [AdminController::class, "HalamanTambahSekolah"])->name("admin.tambah-sekolah");
+        Route::post('/tambah', [AdminController::class, 'TambahSekolah'])->name('post.tambah-sekolah');
+
+        Route::put("/edit/{id}", [AdminController::class, 'EditSekolah'])->name('put.edit-sekolah');
+        Route::delete("/hapus/{id}", [AdminController::class, 'HapusSekolah'])->name('delete.hapus-sekolah');
     });
 
     /**
@@ -40,6 +44,7 @@ Route::prefix("admin")->group(function () {
         Route::get("", [AdminController::class, "HalamanAnggota"])->name("admin.anggota");
 
         Route::get("/tambah", [AdminController::class, "HalamanTambahAnggota"])->name("admin.tambah-anggota");
+        Route::post('/tambah', [AdminController::class, 'TambahAnggota'])->name('post.tambah-anggota');
     });
 
     /**

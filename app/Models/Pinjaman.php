@@ -34,4 +34,9 @@ class Pinjaman extends Model
     {
         return $this->belongsTo(Anggota::class, 'id_anggota');
     }
+
+    public function angsuran()
+    {
+        return $this->hasMany(Angsuran::class, 'id_pinjaman', 'id');
+    }
 }

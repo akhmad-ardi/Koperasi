@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id('id_user');
             $table->string('username', 20)->unique();
             $table->string('password');
+            $table->enum('peran', ['ketua', 'admin'])->default('admin');
             $table->timestamps();
         });
     }

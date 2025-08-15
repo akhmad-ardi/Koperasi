@@ -12,13 +12,17 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <form action="">
+                    <form action="{{ route('post.tambah-sekolah') }}" method="POST">
+                        @csrf
+                        @method('POST')
                         <div class="mb-3">
-                            <x-adminlte-input name="nama" label="Nama Sekolah" placeholder="Nama Sekolah" />
+                            <x-adminlte-input name="nama_sekolah" label="Nama Sekolah" placeholder="Nama Sekolah"
+                                value="{{ old('nama_sekolah') }}" />
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="alamat" label="Alamat Sekolah" placeholder="Alamat Sekolah" />
+                            <x-adminlte-input name="alamat" label="Alamat Sekolah" placeholder="Alamat Sekolah"
+                                value="{{ old('alamat') }}" />
                         </div>
 
                         <div class="mb-3 text-right">

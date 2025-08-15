@@ -12,77 +12,89 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <form action="">
+                    <form action="{{ route('post.tambah-anggota') }}" enctype="multipart/form-data" method="POST">
+                        @csrf
+                        @method('POST')
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <x-adminlte-input name="no_anggota" label="Nomor Anggota" type="text"
-                                        placeholder="Nomor Anggota" />
+                                        placeholder="Nomor Anggota" value="{{ old('no_anggota') }}" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-input name="nama" label="Nama" type="text" placeholder="Nama" />
+                                    <x-adminlte-input name="nama" label="Nama" type="text" placeholder="Nama"
+                                        value="{{ old('nama') }}" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-select name="id_sekolah" label="Sekolah">
+                                    <x-adminlte-select name="id_sekolah" label="Sekolah" value="{{ old('id_sekolah') }}">
                                         <option value="" selected disabled>Pilih Sekolah</option>
-                                        <option value="1">Sekolah 1</option>
-                                        <option value="2">Sekolah 2</option>
+                                        @foreach ($sekolah as $s)
+                                            <option value="{{ $s->id }}"
+                                                {{ old('id_sekolah', $s->id_sekolah) == $s->id ? 'selected' : '' }}>
+                                                {{ $s->nama_sekolah }}</option>
+                                        @endforeach
                                     </x-adminlte-select>
                                 </div>
 
                                 <div class="mb-3">
                                     <x-adminlte-select name="jenis_kelamin" label="Jenis Kelamin">
                                         <option value="" selected disabled>Pilih Jenis Kelamin</option>
-                                        <option value="laki-laki">Laki-laki</option>
-                                        <option value="perempuan">Perempuan</option>
+                                        <option value="laki-laki"
+                                            {{ old('jenis_kelamin') == 'laki-laki' ? 'selected' : '' }}>
+                                            Laki-laki</option>
+                                        <option value="perempuan"
+                                            {{ old('jenis_kelamin') == 'perempuan' ? 'selected' : '' }}>
+                                            Perempuan</option>
                                     </x-adminlte-select>
                                 </div>
 
                                 <div class="mb-3">
                                     <x-adminlte-input name="tempat_lahir" label="Tempat Lahir" type="text"
-                                        placeholder="Tempat Lahir" />
+                                        placeholder="Tempat Lahir" value="{{ old('tempat_lahir') }}" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-input name="tanggal_lahir" label="Tanggal Lahir" type="date"
-                                        placeholder="Tanggal Lahir" />
+                                    <x-adminlte-input name="tgl_lahir" label="Tanggal Lahir" type="date"
+                                        placeholder="Tanggal Lahir" value="{{ old('tgl_lahir') }}" />
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <x-adminlte-input name="pekerjaan" label="Pekerjaan" type="text"
-                                        placeholder="Pekejaan" />
+                                        placeholder="Pekejaan" value="{{ old('pekerjaan') }}" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-input name="nomor_telepon" label="Nomor Telepon" type="number"
-                                        placeholder="Nomor Telepon" />
+                                    <x-adminlte-input name="no_telepon" label="Nomor Telepon" type="number"
+                                        placeholder="Nomor Telepon" value="{{ old('no_telepon') }}" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-input name="alamat" label="Alamat" type="text" placeholder="Alamat" />
+                                    <x-adminlte-input name="alamat" label="Alamat" type="text" placeholder="Alamat"
+                                        value="{{ old('alamat') }}" />
                                 </div>
 
                                 <div class="mb-3">
                                     <x-adminlte-input name="nik" label="NIK" type="number"
-                                        placeholder="Nomor Induk Kependudukan" />
+                                        placeholder="Nomor Induk Kependudukan" value="{{ old('nik') }}" />
                                 </div>
 
                                 <div class="mb-3">
                                     <x-adminlte-input name="nip" label="NIP" type="number"
-                                        placeholder="Nomor Induk Pegawai" />
+                                        placeholder="Nomor Induk Pegawai" value="{{ old('nip') }}" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-input name="foto_diri" label="Foto Diri" type="file" accept="image/*"
+                                    <x-adminlte-input-file name="foto_diri" label="Foto Diri" accept="image/*"
                                         placeholder="Foto Diri" />
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-input name="status" label="Status" type="text" placeholder="Status" />
+                                    <x-adminlte-input name="status" label="Status" type="text" placeholder="Status"
+                                        value="{{ old('status') }}" />
                                 </div>
                             </div>
                         </div>
@@ -104,7 +116,5 @@
 @stop
 
 @section('js')
-    <script>
-        console.log('Dashboard Loaded');
-    </script>
+
 @stop

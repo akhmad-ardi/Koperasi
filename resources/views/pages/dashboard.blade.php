@@ -12,11 +12,11 @@
         <div class="col-md-4">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>20</h3>
+                    <h3>{{ $total_sekolah }}</h3>
                     <p>Total Sekolah</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-school"></i>
                 </div>
                 <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -26,11 +26,11 @@
         <div class="col-md-4">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>100</h3>
+                    <h3>{{ $total_anggota }}</h3>
                     <p>Total Anggota</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-wallet"></i>
+                    <i class="fas fa-users"></i>
                 </div>
                 <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -40,11 +40,11 @@
         <div class="col-md-4">
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>Rp 10.000.000</h3>
+                    <h3>{{ $total_simpanan }}</h3>
                     <p>Total Simpanan</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-hand-holding-usd"></i>
+                    <i class="fas fa-wallet"></i>
                 </div>
                 <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -56,11 +56,11 @@
         <div class="col-md-4">
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>Rp 10.000.000</h3>
+                    <h3>{{ $total_penarikan }}</h3>
                     <p>Total Pinjaman</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-users"></i>
+                    <i class="fas fa-hand-holding-usd"></i>
                 </div>
                 <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -70,11 +70,11 @@
         <div class="col-md-4">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>Rp 9.000.000</h3>
+                    <h3>{{ $total_angsuran }}</h3>
                     <p>Total Pembayaran Angsuran</p>
                 </div>
                 <div class="icon">
-                    <i class="fas fa-wallet"></i>
+                    <i class="fas fa-hand-holding-usd"></i>
                 </div>
                 <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
             </div>
@@ -84,7 +84,7 @@
         <div class="col-md-4">
             <div class="small-box bg-info">
                 <div class="inner">
-                    <h3>Rp 1.000.000</h3>
+                    <h3>{{ $total_penarikan }}</h3>
                     <p>Total Penarikan</p>
                 </div>
                 <div class="icon">
@@ -101,7 +101,5 @@
 @stop
 
 @section('js')
-    <script>
-        console.log('Dashboard Loaded');
-    </script>
+
 @stop

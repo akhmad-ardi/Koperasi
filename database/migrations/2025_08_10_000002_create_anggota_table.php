@@ -19,7 +19,7 @@ return new class extends Migration {
             $table->string('tempat_lahir', 50);
             $table->date('tgl_lahir');
             $table->string('pekerjaan', 50);
-            $table->string('alamat', 50);
+            $table->text('alamat');
             $table->char('no_telepon', 13);
             $table->char('nik', 16);
             $table->char('nip', 18);
