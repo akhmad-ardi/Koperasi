@@ -306,13 +306,11 @@ return [
     'menu' => [
         // Navbar items:
         [
-            'type' => 'navbar-search',
-            'text' => 'search',
+            'text' => 'Logout',
+            'url' => 'logout',
+            'icon' => 'fas fa-sign-out-alt',
             'topnav_right' => true,
-        ],
-        [
-            'type' => 'fullscreen-widget',
-            'topnav_right' => true,
+            'onclick' => "event.preventDefault(); document.getElementById('logout-form').submit();"
         ],
 
         // Sidebar items:

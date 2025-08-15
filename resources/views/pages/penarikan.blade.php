@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
     <div class="row mb-3">
         <div class="col">
             <a href="{{ route('admin.tambah-penarikan') }}" class="btn btn-primary">

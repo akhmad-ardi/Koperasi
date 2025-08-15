@@ -8,6 +8,10 @@
 
 
 @section('content')
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">

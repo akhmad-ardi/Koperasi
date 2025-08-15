@@ -8,6 +8,10 @@
 
 
 @section('content')
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
     <div class="row justify-content-center">
         <div class="col">
             <div class="card">
@@ -28,7 +32,7 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-select name="id_sekolah" label="Sekolah" value="{{ old('id_sekolah') }}">
+                                    <x-adminlte-select name="id_sekolah" label="Sekolah">
                                         <option value="" selected disabled>Pilih Sekolah</option>
                                         @foreach ($sekolah as $s)
                                             <option value="{{ $s->id }}"
@@ -89,7 +93,7 @@
 
                                 <div class="mb-3">
                                     <x-adminlte-input-file name="foto_diri" label="Foto Diri" accept="image/*"
-                                        placeholder="Foto Diri" />
+                                        placeholder="Upload Foto Diri" />
                                 </div>
 
                                 <div class="mb-3">

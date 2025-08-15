@@ -8,39 +8,61 @@
 
 
 @section('content')
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <form action="">
+                    <form action="{{ route('post.tambah-simpanan') }}" method="POST">
+                        @csrf
+                        @method('POST')
                         <div class="mb-3">
-                            <x-adminlte-input name="nomor_anggota" label="Nomor Anggota" type="number"
-                                placeholder="Nomor Anggota" />
+                            <x-adminlte-select name="id_anggota" label="Nomor Anggota">
+                                <option value="" selected disabled>Pilih Sekolah</option>
+                                @foreach ($anggota as $a)
+                                    <option value="{{ $a->id }}" data-nama="{{ $a->nama }}"
+                                        {{ old('id') == $a->id ? 'selected' : '' }}>
+                                        {{ $a->no_anggota }} | {{ $a->nama }}</option>
+                                @endforeach
+                            </x-adminlte-select>
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="nama" label="Nama Anggota" type="text"
-                                placeholder="Nama Anggta" />
+                            <x-adminlte-input name="nama" label="Nama Anggota" type="text" placeholder="Nama Anggta"
+                                value="{{ old('nama') }}" disabled />
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="tanggal_simpanan" label="Tanggal Simpanan" type="date"
+                            <x-adminlte-input name="tgl_simpanan" label="Tanggal Simpanan" type="date"
                                 placeholder="Tanggal Simmpanan" value="{{ date('Y-m-d') }}" />
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="jenis_simpanan" label="Jenis Simpanan" type="text"
-                                placeholder="Jenis Simpanan" />
+                            <x-adminlte-select name="jenis_simpanan" label="Jenis Simpanan">
+                                <option value="" selected disabled>Jenis Simpanan</option>
+                                <option value="pokok" {{ old('jenis_simpanan') == 'pokok' ? 'selected' : '' }}>
+                                    Pokok
+                                </option>
+                                <option value="wajib" {{ old('jenis_simpanan') == 'wajib' ? 'selected' : '' }}>
+                                    Wajib
+                                </option>
+                                <option value="sukarela" {{ old('jenis_simpanan') == 'sukarela' ? 'selected' : '' }}>
+                                    Sukarela
+                                </option>
+                            </x-adminlte-select>
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="jumlah_penarikan" label="Jumlah Penarikan" type="number"
-                                placeholder="Jumlah Penarikan" />
+                            <x-adminlte-input name="jumlah_simpanan" label="Jumlah Simpanan" type="number"
+                                placeholder="Jumlah Simpanan" value="{{ old('jumlah_simpanan') }}" />
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="keterangan" label="Keterangan" type="text"
-                                placeholder="Keterangan" />
+                            <x-adminlte-input name="keterangan" label="Keterangan" type="text" placeholder="Keterangan"
+                                value="{{ old('keterangan') }}" />
                         </div>
 
                         <div class="mb-3 text-right">
@@ -61,6 +83,10 @@
 
 @section('js')
     <script>
-        console.log('Dashboard Loaded');
+        document.getElementById('id_anggota').addEventListener('change', function() {
+            let selected = this.options[this.selectedIndex];
+            let nama = selected.getAttribute('data-nama');
+            document.getElementById('nama').value = nama ?? '';
+        });
     </script>
 @stop

@@ -3,24 +3,39 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function HalamanLogin() {
-        return view('vendor.adminlte.auth.login');
+    public function HalamanLogin()
+    {
+        return view('auth.login');
     }
 
-    public function login(Request $request) {
-        $request->validate([
-            'username' => ['required'],
-            'password' => ['required']
+    public function login(Request $request)
+    {
+        $credentials = $request->validate([
+            'username' => ['required', 'string'],
+            'password' => ['required', 'string'],
         ]);
 
-        $data = [
-            'username' => $request->input('username'),
-            'password' => $request->input('password')
-        ];
+        if (Auth::guard('web')->attempt($credentials)) {
+            $request->session()->regenerate(); // mencegah session fixation
+            return redirect()->intended('/admin/dashboard')
+                ->with('msg_success', 'Login berhasil');
+        }
 
-        // if (Auth::attempt()) {}
+        return back()
+            ->withInput()
+            ->with('msg_error', 'Username atau password salah');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect()->route('login')->with('msg_success', 'Berhasil logout');
     }
 }

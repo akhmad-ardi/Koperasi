@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
     <div class="row">
         <div class="col">
             <div class="card">

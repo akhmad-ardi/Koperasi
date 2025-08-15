@@ -181,12 +181,52 @@ class AdminController extends Controller
 
     public function HalamanSimpanan()
     {
-        return view('pages.simpanan');
+        $simpanan = Simpanan::all();
+
+        $simpanan = $simpanan->sortByDesc('tgl_simpanan');
+
+        foreach ($simpanan as $s) {
+            $s->jumlah_simpanan = Helper::stringToRupiah($s->jumlah_simpanan);
+            $s->tgl_simpanan = Helper::getTanggalAttribute($s->tgl_simpanan);
+        }
+
+        return view('pages.simpanan', [
+            'simpanan' => $simpanan
+        ]);
     }
 
     public function HalamanTambahSimpanan()
     {
-        return view('pages.tambah-simpanan');
+        $anggota = Anggota::all();
+
+        return view('pages.tambah-simpanan', [
+            'anggota' => $anggota
+        ]);
+    }
+
+    public function TambahSimpanan(Request $request)
+    {
+        $request->validate([
+            'id_anggota' => ['required', 'exists:anggota,id'],
+            'tgl_simpanan' => ['required', 'date'],
+            'jenis_simpanan' => ['required', 'in:pokok,wajib,sukarela'],
+            'jumlah_simpanan' => ['required', 'numeric', 'min:1'],
+            'keterangan' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $data = [
+            'id_anggota' => $request->input('id_anggota'),
+            'tgl_simpanan' => $request->input('tgl_simpanan'),
+            'jenis_simpanan' => $request->input('jenis_simpanan'),
+            'jumlah_simpanan' => $request->input('jumlah_simpanan'),
+            'keterangan' => $request->input('keterangan'),
+        ];
+
+        Simpanan::create($data);
+
+        return redirect()
+            ->route('admin.anggota')
+            ->with('msg_success', 'Anggota Berhasil Ditambahkan');
     }
 
     public function HalamanPinjaman()

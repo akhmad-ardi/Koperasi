@@ -22,12 +22,12 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(3)->create();
 
-        // User::factory()->create([
-        //     'username' => 'admin',
-        //     'password' => Hash::make("123456"),
-        //     "created_at" => now(),
-        //     "updated_at" => now(),
-        // ]);
+        User::factory()->create([
+            'username' => 'admin',
+            'password' => Hash::make("123456"),
+            "created_at" => now(),
+            "updated_at" => now(),
+        ]);
 
         Sekolah::factory(3)
             ->has(

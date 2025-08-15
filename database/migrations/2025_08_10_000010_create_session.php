@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,7 +13,7 @@ return new class extends Migration
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
 
-            $table->string('user_id', 21)->nullable()->index();
+            $table->foreignId('user_id')->nullable()->index();
 
             // Tipe pengguna: 'user' atau 'anggota'
             $table->enum('user_type', ['user', 'anggota'])->nullable();

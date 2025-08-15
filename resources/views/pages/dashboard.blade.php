@@ -94,6 +94,10 @@
             </div>
         </div>
     </div>
+
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
 @stop
 
 @section('css')
@@ -101,5 +105,23 @@
 @stop
 
 @section('js')
+    @if (session('msg_success'))
+        <script>
+            toastr.success("{{ session('msg_success') }}", {
+                timeOut: 3000,
+                closeButton: true,
+                progressBar: true
+            });
+        </script>
+    @endif
 
+    @if (session('msg_error'))
+        <script>
+            toastr.error("{{ session('msg_error') }}", {
+                timeOut: 3000,
+                closeButton: true,
+                progressBar: true
+            });
+        </script>
+    @endif
 @stop

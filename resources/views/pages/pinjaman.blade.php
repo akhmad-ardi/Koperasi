@@ -7,6 +7,10 @@
 @stop
 
 @section('content')
+    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+        @csrf
+    </form>
+
     <div class="row mb-3">
         <div class="col">
             <a href="{{ route('admin.tambah-pinjaman') }}" class="btn btn-primary">
@@ -107,8 +111,8 @@
                                         <p>Apakah anda ingin menghapus data ini ?</p>
                                         <form action="">
                                             <x-slot name="footerSlot">
-                                                <x-adminlte-button type="button" theme="outline-danger" label="Batal Hapus"
-                                                    data-dismiss="modal" />
+                                                <x-adminlte-button type="button" theme="outline-danger"
+                                                    label="Batal Hapus" data-dismiss="modal" />
                                                 <x-adminlte-button type="submit" theme="danger"
                                                     icon="fas fa-fw fa-trash" label="Hapus" />
                                             </x-slot>
