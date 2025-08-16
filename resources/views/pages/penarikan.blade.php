@@ -33,6 +33,7 @@
                                 <th class="text-center">Jenis Simpanan</th>
                                 <th class="text-center">Jumlah Penarikan</th>
                                 <th class="text-center">Keterangan</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -44,6 +45,13 @@
                                     <td>{{ $p->jenis_simpanan }}</td>
                                     <td>{{ $p->jumlah_penarikan }}</td>
                                     <td>{{ $p->keterangan }}</td>
+                                    <td>
+                                        <a href="{{ route('admin.detail-penarikan', ['id_anggota' => $p->anggota->id]) }}"
+                                            class="btn btn-info">
+                                            <i class="fa fa-fw fa-hand-holding-usd"></i>
+                                            Detail
+                                        </a>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

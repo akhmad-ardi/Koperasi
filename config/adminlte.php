@@ -323,26 +323,31 @@ return [
             'text' => 'Sekolah',
             'url' => 'admin/sekolah',
             'icon' => 'fas fa-fw fa-school',
+            'can' => 'is-admin',
         ],
         [
             'text' => 'Anggota',
             'url' => 'admin/anggota',
             'icon' => 'fas fa-fw fa-users',
+            'can' => 'is-admin',
         ],
         [
             'text' => 'Simpanan',
             'url' => 'admin/simpanan',
             'icon' => 'fas fa-fw fa-wallet',
+            'can' => 'is-admin',
         ],
         [
             'text' => 'Pinjaman',
             'url' => 'admin/pinjaman',
             'icon' => 'fas fa-fw fa-hand-holding-usd',
+            'can' => 'is-admin',
         ],
         [
             'text' => 'Penarikan',
             'url' => 'admin/penarikan',
             'icon' => 'fas fa-fw fa-hand-holding-usd',
+            'can' => 'is-admin',
         ],
         [
             'text' => 'Laporan',

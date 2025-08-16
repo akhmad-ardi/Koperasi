@@ -23,12 +23,10 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
-        $roles = ['ketua', 'admin'];
-
         return [
             'username' => $this->faker->unique()->userName(),
             'password' => Hash::make('123456'),
-            'peran' => $roles[rand(0, 1)],
+            'role' => $this->faker->randomElement(['ketua', 'admin']),
             'created_at' => now(),
             'updated_at' => now(),
         ];

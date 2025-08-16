@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Informasi Pinjaman')
+@section('title', 'Simpanan')
 
 @section('content_header')
-    <h1>Informasi Pinjaman</h1>
+    <h1>Data Simpanan</h1>
 @stop
 
 @section('content')
@@ -18,17 +18,27 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <x-adminlte-input name="no_anggota" label="Nomor Anggota" type="text" placeholder="Nama Anggta"
-                            value="{{ $detail_pinjaman->anggota->no_anggota }}" disabled />
+                            value="{{ $simpanan[0]->anggota->no_anggota }}" disabled />
                     </div>
 
                     <div class="mb-3">
                         <x-adminlte-input name="nama" label="Nama" type="text" placeholder="Nama"
-                            value="{{ $detail_pinjaman->anggota->nama }}" disabled />
+                            value="{{ $simpanan[0]->anggota->nama }}" disabled />
                     </div>
 
                     <div class="mb-3">
-                        <x-adminlte-input name="jumlah_pinjaman" label="Jumlah Pinjaman" type="text"
-                            placeholder="Jumlah Pinjaman" value="{{ $detail_pinjaman->jumlah_pinjaman }}" disabled />
+                        <x-adminlte-input name="total_simpanan_pokok" label="Total Simpanan Pokok" type="text"
+                            placeholder="Total Simpanan Pokok" value="{{ $total_simpanan_pokok }}" disabled />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-adminlte-input name="total_simpanan_wajib" label="Total Simpanan Wajib" type="text"
+                            placeholder="Total Simpanan Wajib" value="{{ $total_simpanan_wajib }}" disabled />
+                    </div>
+
+                    <div class="mb-3">
+                        <x-adminlte-input name="total_simpanan_sukarela" label="Total Simpanan Sukarela" type="text"
+                            placeholder="Total Simpanan Sukarela" value="{{ $total_simpanan_sukarela }}" disabled />
                     </div>
                 </div>
             </div>
@@ -37,13 +47,13 @@
 
     <div class="row mb-3">
         <div class="col">
-            <a href="{{ route('admin.pinjaman') }}" class="btn btn-danger">
+            <a href="{{ route('admin.simpanan') }}" class="btn btn-danger">
                 <i class="fa fa-fw fa-arrow-left"></i>
                 Kembali
             </a>
-            <a href="{{ route('admin.bayar-angsuran', ['id_pinjaman' => $detail_pinjaman->id]) }}" class="btn btn-primary">
-                <i class="fa fa-fw fa-hand-holding-usd"></i>
-                Bayar Angsuran
+            <a href="{{ route('admin.tambah-simpanan') }}" class="btn btn-primary">
+                <i class="fa fa-fw fa-plus"></i>
+                Tambah Simpanan
             </a>
         </div>
     </div>
@@ -56,26 +66,18 @@
                         <thead>
                             <tr>
                                 <th class="text-center">Nomor</th>
-                                <th class="text-center">Angsuran Ke</th>
-                                <th class="text-center">No. Anggota</th>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center">Tanggal Angsuran</th>
-                                <th class="text-center">Jumlah Angsuran</th>
-                                <th class="text-center">Jasa</th>
-                                <th class="text-center">Total Angsuran</th>
+                                <th class="text-center">Tanggal Simpanan</th>
+                                <th class="text-center">Jenis Simpanan</th>
+                                <th class="text-center">Jumlah Simpanan</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($detail_pinjaman->angsuran as $a)
+                            @foreach ($simpanan as $s)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $a->angsuran_ke }}</td>
-                                    <td>{{ $a->pinjaman->anggota->no_anggota }}</td>
-                                    <td>{{ $a->pinjaman->anggota->nama }}</td>
-                                    <td>{{ $a->tgl_angsuran }}</td>
-                                    <td>{{ $a->jumlah_angsuran }}</td>
-                                    <td>{{ $a->jasa }}</td>
-                                    <td>{{ $a->total_angsuran }}</td>
+                                    <td>{{ $s->tgl_simpanan }}</td>
+                                    <td>{{ $s->jenis_simpanan }}</td>
+                                    <td>{{ $s->jumlah_simpanan }}</td>
                                 </tr>
                             @endforeach
                         </tbody>

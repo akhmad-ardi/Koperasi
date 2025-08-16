@@ -2,16 +2,14 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use App\Models\Sekolah;
 use App\Models\Anggota;
 use App\Models\Angsuran;
 use App\Models\Penarikan;
 use App\Models\Simpanan;
 use App\Models\Pinjaman;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
+// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class DatabaseSeeder extends Seeder
 {
@@ -20,13 +18,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(3)->create();
-
-        User::factory()->create([
-            'username' => 'admin',
-            'password' => Hash::make("123456"),
-            "created_at" => now(),
-            "updated_at" => now(),
+        $this->call([
+            AdminSeeder::class
         ]);
 
         Sekolah::factory(3)
