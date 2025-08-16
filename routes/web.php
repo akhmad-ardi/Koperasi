@@ -97,10 +97,14 @@ Route::prefix("admin")
             });
 
             Route::get("simpanan", [AdminController::class, 'HalamanLaporanSimpanan'])->name("admin.laporan.simpanan");
+            Route::get('/simpanan/pdf', [AdminController::class, 'LaporanSimpananPDF'])
+                ->name('laporan.simpanan.pdf');
 
             Route::get("pinjaman", [AdminController::class, 'HalamanLaporanPinjaman'])->name("admin.laporan.pinjaman");
+            Route::get('/pinjaman/pdf', [AdminController::class, 'LaporanPinjaman'])->name('laporan.pinjaman.pdf');
 
-            Route::get("penarikan", [AdminController::class, 'HalamanLaporanPenarikan'])->name("admin.laporan.penarikan");
+            Route::get("/penarikan", [AdminController::class, 'HalamanLaporanPenarikan'])->name("admin.laporan.penarikan");
+            Route::get("/penarikan/pdf", [AdminController::class, 'LaporanPenarikan'])->name("laporan.penarikan.pdf");
         });
     });
 

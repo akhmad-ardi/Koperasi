@@ -11,6 +11,15 @@
         @csrf
     </form>
 
+    <div class="row mb-3">
+        <div class="col">
+            <a href="{{ route('laporan.penarikan.pdf') }}" class="btn btn-primary">
+                <i class="fa fa-fw fa-download"></i>
+                Unduh Laporan
+            </a>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
             <div class="card">
@@ -18,25 +27,21 @@
                     <table id="anggotaTable" class="table table-bordered table-striped">
                         <thead>
                             <tr>
-                                <th class="text-center">Nomor</th>
-                                <th class="text-center">No. Anggota</th>
-                                <th class="text-center">Nama</th>
-                                <th class="text-center">Tanggal Penarikan</th>
-                                <th class="text-center">Jenis Simpanan</th>
-                                <th class="text-center">Jumlah Penarikan</th>
-                                <th class="text-center">Keterangan</th>
+                                <th>No</th>
+                                <th>No. Anggota</th>
+                                <th>Nama Anggota</th>
+                                <th>Total Penarikan</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-center">1</td>
-                                <td>1</td>
-                                <td>Ardi</td>
-                                <td>31-12-2024</td>
-                                <td>Pokok</td>
-                                <td>Rp 1.000.000</td>
-                                <td>-</td>
-                            </tr>
+                            @foreach ($anggota as $a)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $a->no_anggota }}</td>
+                                    <td>{{ $a->nama }}</td>
+                                    <td>Rp {{ number_format($a->total_penarikan, 0, ',', '.') }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>

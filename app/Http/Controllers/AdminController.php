@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Sekolah;
 use App\Models\Anggota;
 use App\Models\Simpanan;
@@ -409,16 +410,108 @@ class AdminController extends Controller
 
     public function HalamanLaporanSimpanan()
     {
-        return view('pages.laporan-simpanan');
+        $anggota = Anggota::with(['simpanan', 'penarikan'])->get();
+
+        // hitung saldo akhir per anggota
+        $anggota->map(function ($a) {
+            $simpanan = $a->simpanan->sum('jumlah_simpanan');
+            $penarikan = $a->penarikan->sum('jumlah_penarikan');
+            $a->saldo = Helper::stringToRupiah($simpanan - $penarikan);
+            $a->jumlah_simpanan = Helper::stringToRupiah($simpanan);
+            $a->jumlah_penarikan = Helper::stringToRupiah($penarikan);
+            return $a;
+        });
+
+        return view('pages.laporan-simpanan', [
+            'anggota' => $anggota
+        ]);
+    }
+
+    public function LaporanSimpananPDF()
+    {
+        $anggota = Anggota::with(['simpanan', 'penarikan'])->get();
+
+        // hitung saldo akhir per anggota
+        $anggota->map(function ($a) {
+            $simpanan = $a->simpanan->sum('jumlah_simpanan');
+            $penarikan = $a->penarikan->sum('jumlah_penarikan');
+            $a->saldo = $simpanan - $penarikan;
+            return $a;
+        });
+
+        $pdf = Pdf::loadView('laporan.simpanan', compact('anggota'))
+            ->setPaper('a4', 'landscape');
+
+        return $pdf->download('laporan-simpanan.pdf');
     }
 
     public function HalamanLaporanPinjaman()
     {
-        return view('pages.laporan-pinjaman');
+        $anggota = Anggota::with(['pinjaman.angsuran'])->get()->map(function ($a) {
+            $totalPinjaman = 0;
+            $totalAngsuran = 0;
+
+            if ($a->pinjaman) {
+                $totalPinjaman = (float) $a->pinjaman->jumlah_pinjaman;
+                $totalAngsuran = (float) $a->pinjaman->angsuran->sum('jumlah_angsuran');
+            }
+
+            $a->total_pinjaman = $totalPinjaman;
+            $a->total_angsuran = $totalAngsuran;
+            $a->sisa_pinjaman = $totalPinjaman - $totalAngsuran;
+
+            return $a;
+        });
+
+        return view('pages.laporan-pinjaman', [
+            'anggota' => $anggota
+        ]);
+    }
+
+    public function LaporanPinjaman()
+    {
+        $anggota = Anggota::with(['pinjaman.angsuran'])->get()->map(function ($a) {
+            $totalPinjaman = 0;
+            $totalAngsuran = 0;
+
+            if ($a->pinjaman) {
+                $totalPinjaman = (float) $a->pinjaman->jumlah_pinjaman;
+                $totalAngsuran = (float) $a->pinjaman->angsuran->sum('jumlah_angsuran');
+            }
+
+            $a->total_pinjaman = $totalPinjaman;
+            $a->total_angsuran = $totalAngsuran;
+            $a->sisa_pinjaman = $totalPinjaman - $totalAngsuran;
+
+            return $a;
+        });
+
+        $pdf = Pdf::loadView('laporan.pinjaman', compact('anggota'));
+        return $pdf->download('laporan-pinjaman.pdf');
     }
 
     public function HalamanLaporanPenarikan()
     {
-        return view('pages.laporan-penarikan');
+        $anggota = Anggota::with('penarikan')->get()->map(function ($a) {
+            $totalPenarikan = (float) $a->penarikan->sum('jumlah_penarikan');
+            $a->total_penarikan = $totalPenarikan;
+            return $a;
+        });
+
+        return view('pages.laporan-penarikan', [
+            'anggota' => $anggota
+        ]);
+    }
+
+    public function LaporanPenarikan()
+    {
+        $anggota = Anggota::with('penarikan')->get()->map(function ($a) {
+            $totalPenarikan = (float) $a->penarikan->sum('jumlah_penarikan');
+            $a->total_penarikan = $totalPenarikan;
+            return $a;
+        });
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('laporan.penarikan', compact('anggota'));
+        return $pdf->download('laporan-penarikan.pdf');
     }
 }

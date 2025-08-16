@@ -11,6 +11,15 @@
         @csrf
     </form>
 
+    <div class="row mb-3">
+        <div class="col">
+            <a href="{{ route('laporan.simpanan.pdf') }}" class="btn btn-primary">
+                <i class="fa fa-fw fa-download"></i>
+                Unduh Laporan
+            </a>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col">
             <div class="card">
@@ -27,14 +36,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td class="text-center">1</td>
-                                <td>1</td>
-                                <td>Ardi</td>
-                                <td>Pokok</td>
-                                <td>Rp 500.000</td>
-                                <td>31-12-2024</td>
-                            </tr>
+                            @foreach ($anggota as $a)
+                                <tr>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td>{{ $a->no_anggota }}</td>
+                                    <td>{{ $a->nama }}</td>
+                                    <td>{{ $a->jumlah_simpanan }}</td>
+                                    <td>{{ $a->jumlah_penarikan }}</td>
+                                    <td>{{ $a->saldo }}</td>
+                                </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
