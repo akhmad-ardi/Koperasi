@@ -16,25 +16,44 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <form action="">
+                    <form action="{{ route('post.tambah-penarikan') }}" method="POSt">
+                        @csrf
+                        @method('POST')
                         <div class="mb-3">
-                            <x-adminlte-input name="nomor_anggota" label="Nomor Anggota" type="number"
-                                placeholder="Nomor Anggota" />
+                            <x-adminlte-select id="id_anggota" name="id_anggota" label="Nomor Anggota">
+                                <option value="" selected disabled>Pilih Nomor Anggota</option>
+                                @foreach ($anggota as $a)
+                                    <option value="{{ $a->id }}" data-nama="{{ $a->nama }}"
+                                        data-simpanan='@json($a->simpanan->groupBy('jenis_simpanan')->map->sum('jumlah_simpanan'))'
+                                        data-penarikan='@json($a->penarikan->groupBy('jenis_simpanan')->map->sum('jumlah_penarikan'))'>
+                                        {{ $a->no_anggota }} | {{ $a->nama }}
+                                    </option>
+                                @endforeach
+                            </x-adminlte-select>
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="nama" label="Nama Anggota" type="text"
-                                placeholder="Nama Anggota" />
+                            <x-adminlte-input id="nama" name="nama" label="Nama Anggota" type="text"
+                                placeholder="Nama Anggota" disabled />
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="tanggal_penarikan" label="Tanggal Penarikan" type="date"
-                                placeholder="Tanggal Penarikan" />
+                            <x-adminlte-input name="tgl_penarikan" label="Tanggal Penarikan" type="date"
+                                value="{{ old('tgl_penarikan') ?? date('Y-m-d') }}" />
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="jenis_simpanan" label="Jenis Simpanan" type="text"
-                                placeholder="Jenis Simpanan" />
+                            <x-adminlte-select id="jenis_simpanan" name="jenis_simpanan" label="Jenis Simpanan">
+                                <option value="" selected disabled>Jenis Simpanan</option>
+                                <option value="pokok">Pokok</option>
+                                <option value="wajib">Wajib</option>
+                                <option value="sukarela">Sukarela</option>
+                            </x-adminlte-select>
+                        </div>
+
+                        <div class="mb-3">
+                            <x-adminlte-input id="jumlah_simpanan" name="jumlah_simpanan" label="Jumlah Simpanan"
+                                type="text" disabled />
                         </div>
 
                         <div class="mb-3">
@@ -65,6 +84,50 @@
 
 @section('js')
     <script>
-        console.log('Dashboard Loaded');
+        document.addEventListener("DOMContentLoaded", function() {
+            const anggotaSelect = document.getElementById("id_anggota");
+            const jenisSelect = document.getElementById("jenis_simpanan");
+            const namaInput = document.getElementById("nama");
+            const simpananInput = document.getElementById("jumlah_simpanan");
+
+            let simpananData = {};
+            let penarikanData = {};
+
+            anggotaSelect.addEventListener("change", function() {
+                const selected = this.options[this.selectedIndex];
+                namaInput.value = selected.dataset.nama;
+
+                // simpan data simpanan & penarikan ke variabel
+                simpananData = JSON.parse(selected.dataset.simpanan || "{}");
+                penarikanData = JSON.parse(selected.dataset.penarikan || "{}");
+
+                simpananInput.value = ""; // reset
+            });
+
+            jenisSelect.addEventListener("change", function() {
+                const jenis = this.value;
+
+                let totalSimpanan = simpananData[jenis] ?? 0;
+                let totalPenarikan = penarikanData[jenis] ?? 0;
+
+                let saldo = totalSimpanan - totalPenarikan;
+
+                simpananInput.value = new Intl.NumberFormat("id-ID", {
+                    style: "currency",
+                    currency: "IDR",
+                    minimumFractionDigits: 0
+                }).format(saldo);;
+            });
+        });
     </script>
+
+    @if (session('msg_error'))
+        <script>
+            toastr.error("{{ session('msg_error') }}", {
+                timeOut: 3000,
+                closeButton: true,
+                progressBar: true
+            });
+        </script>
+    @endif
 @stop

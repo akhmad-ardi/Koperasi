@@ -18,8 +18,7 @@ class AngsuranFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_pinjaman' => Pinjaman::factory(), // atau isi manual id anggota
-            'angsuran_ke' => $this->faker->numberBetween(1, 36),
+            'id_pinjaman' => Pinjaman::factory(),
             'tgl_angsuran' => $this->faker->date(),
             'jumlah_angsuran' => $this->faker->numberBetween(500000, 2000000),
             'jasa' => $this->faker->numberBetween(50000, 200000),

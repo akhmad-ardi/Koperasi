@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->date('tgl_penarikan');
             $table->enum('jenis_simpanan', ['pokok', 'wajib', 'sukarela']);
             $table->integer('jumlah_penarikan');
-            $table->text('keterangan');
+            $table->text('keterangan')->nullable();
 
             $table->foreign('id_anggota')->references('id')->on('anggota')->onDelete('cascade');
         });

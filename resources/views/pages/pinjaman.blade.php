@@ -47,74 +47,13 @@
                                     <td>{{ $p->jumlah_pinjaman }}</td>
                                     <td>{{ $p->jaminan }}</td>
                                     <td>{{ $p->status }}</td>
-                                    <td class="text-center d-flex flex-wrap justify-content-center">
+                                    <td class="text-center">
                                         {{-- Detail --}}
-                                        <x-adminlte-button label="Detail" theme="info" icon="fas fa-fw fa-user"
-                                            data-toggle="modal" data-target="#modalDetail" class="mr-1" />
-
-                                        <x-adminlte-modal id="modalDetail" title="Detail Data" theme="info"
-                                            icon="fas fa-fw fa-user" size='md'>
-                                            <form action="">
-                                                <div class="mb-3 text-left">
-                                                    <x-adminlte-input name="nama" label="Nama Sekolah"
-                                                        placeholder="Nama Sekolah" />
-                                                </div>
-                                                <div class="mb-3 text-left">
-                                                    <x-adminlte-input name="alamat" label="Alamat Sekolah"
-                                                        placeholder="Alamat Sekolah" />
-                                                </div>
-                                                <x-slot name="footerSlot">
-                                                    <x-adminlte-button type="button" theme="outline-primary"
-                                                        label="Batal Edit" data-dismiss="modal" />
-                                                    <x-adminlte-button type="submit" theme="primary"
-                                                        icon="fas fa-fw fa-trash" label="Simpan Edit" />
-                                                </x-slot>
-                                            </form>
-                                        </x-adminlte-modal>
-
-                                        {{-- Unduh --}}
-                                        <x-adminlte-button label="Unduh" theme="success" icon="fas fa-fw fa-download" />
-
-                                        {{-- Edit --}}
-                                        <x-adminlte-button label="Edit" theme="primary" icon="fas fa-fw fa-pen"
-                                            data-toggle="modal" data-target="#modalEdit" class="mt-1 mr-1" />
-
-                                        <x-adminlte-modal id="modalEdit" title="Edit Data" theme="primary"
-                                            icon="fas fa-fw fa-pen" size='md'>
-                                            <form action="">
-                                                <div class="mb-3 text-left">
-                                                    <x-adminlte-input name="nama" label="Nama Sekolah"
-                                                        placeholder="Nama Sekolah" />
-                                                </div>
-                                                <div class="mb-3 text-left">
-                                                    <x-adminlte-input name="alamat" label="Alamat Sekolah"
-                                                        placeholder="Alamat Sekolah" />
-                                                </div>
-                                                <x-slot name="footerSlot">
-                                                    <x-adminlte-button type="button" theme="outline-primary"
-                                                        label="Batal Edit" data-dismiss="modal" />
-                                                    <x-adminlte-button type="submit" theme="primary"
-                                                        icon="fas fa-fw fa-trash" label="Simpan Edit" />
-                                                </x-slot>
-                                            </form>
-                                        </x-adminlte-modal>
-
-                                        {{-- Hapus --}}
-                                        <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
-                                            data-toggle="modal" data-target="#modalHapus" class="mt-1" />
-
-                                        <x-adminlte-modal id="modalHapus" title="Hapus Data" theme="danger"
-                                            icon="fas fa-fw fa-trash" size='md'>
-                                            <p>Apakah anda ingin menghapus data ini ?</p>
-                                            <form action="">
-                                                <x-slot name="footerSlot">
-                                                    <x-adminlte-button type="button" theme="outline-danger"
-                                                        label="Batal Hapus" data-dismiss="modal" />
-                                                    <x-adminlte-button type="submit" theme="danger"
-                                                        icon="fas fa-fw fa-trash" label="Hapus" />
-                                                </x-slot>
-                                            </form>
-                                        </x-adminlte-modal>
+                                        <a href="{{ route('admin.detail-pinjaman', ['id_pinjaman' => $p->id]) }}"
+                                            class="btn btn-info">
+                                            <i class="fas fa-fw fa-user"></i>
+                                            Detail
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -14,13 +14,24 @@ class Angsuran extends Model
     public $timestamps = false; // karena tabel ini tidak punya created_at/updated_at
     protected $fillable = [
         'id_pinjaman',
-        'angsuran_ke',
         'tgl_angsuran',
         'jumlah_angsuran',
         'jasa',
         'total_angsuran',
         'status'
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($angsuran) {
+            // Ambil nomor angsuran terakhir untuk pinjaman ini
+            $lastNumber = self::where('id_pinjaman', $angsuran->id_pinjaman)
+                ->max('angsuran_ke');
+
+            // Kalau belum ada, mulai dari 1
+            $angsuran->angsuran_ke = $lastNumber ? $lastNumber + 1 : 1;
+        });
+    }
 
     public function pinjaman()
     {

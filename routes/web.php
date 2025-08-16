@@ -10,6 +10,8 @@ Route::get('/', function () {
     return redirect()->route("admin.dashboard");
 });
 
+Route::get("/logout", [AuthController::class, 'logout'])->name('logout');
+
 Route::prefix("auth")->group(function () {
     Route::get("", function () {
         return redirect()->route('login');
@@ -18,7 +20,6 @@ Route::prefix("auth")->group(function () {
     Route::get('/login', [AuthController::class, 'HalamanLogin'])->name('login')->middleware(LoginMiddleware::class);
     Route::post('/login', [AuthController::class, 'login'])->name('post.login')->middleware(LoginMiddleware::class);
 
-    Route::post("/logout", [AuthController::class, 'logout'])->name('logout');
 });
 
 Route::prefix("admin")
@@ -69,12 +70,12 @@ Route::prefix("admin")
         Route::prefix("pinjaman")->group(function () {
             Route::get("", [AdminController::class, "HalamanPinjaman"])->name("admin.pinjaman");
 
-            Route::get("/detail/{id}", [AdminController::class, "HalamanDetailPinjaman"])->name("admin.pinjaman");
-
             Route::get("/tambah", [AdminController::class, "HalamanTambahPinjaman"])->name("admin.tambah-pinjaman");
             Route::post('/tambah', [AdminController::class, 'TambahPinjaman'])->name('post.tambah-pinjaman');
 
-
+            Route::get("/detail/{id_pinjaman}", [AdminController::class, "HalamanDetailPinjaman"])->name("admin.detail-pinjaman");
+            Route::get('/bayar-angsuran/{id_pinjaman}', [AdminController::class, "HalamanBayarAngsuran"])->name('admin.bayar-angsuran');
+            Route::post('/bayar-angsuran/{id_pinjaman}', [AdminController::class, "BayarAngsuran"])->name('post.bayar-angsuran');
         });
 
         /**
@@ -84,6 +85,7 @@ Route::prefix("admin")
             Route::get("", [AdminController::class, "HalamanPenarikan"])->name("admin.penarikan");
 
             Route::get("/tambah", [AdminController::class, "HalamanTambahPenarikan"])->name("admin.tambah-penarikan");
+            Route::post("/tambah", [AdminController::class, "TambahPenarikan"])->name("post.tambah-penarikan");
         });
 
         /**

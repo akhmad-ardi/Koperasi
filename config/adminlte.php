@@ -264,6 +264,7 @@ return [
     'use_route_url' => false,
     'dashboard_url' => 'home',
     'logout_url' => 'logout',
+    'logout_method' => 'GET',
     'login_url' => 'login',
     'register_url' => 'register',
     'password_reset_url' => 'password/reset',
@@ -307,10 +308,9 @@ return [
         // Navbar items:
         [
             'text' => 'Logout',
-            'url' => 'logout',
+            'route' => 'logout',
             'icon' => 'fas fa-sign-out-alt',
             'topnav_right' => true,
-            'onclick' => "event.preventDefault(); document.getElementById('logout-form').submit();"
         ],
 
         // Sidebar items:
@@ -337,11 +337,6 @@ return [
         [
             'text' => 'Pinjaman',
             'url' => 'admin/pinjaman',
-            'icon' => 'fas fa-fw fa-hand-holding-usd',
-        ],
-        [
-            'text' => 'Angsuran',
-            'url' => 'admin/angsuran',
             'icon' => 'fas fa-fw fa-hand-holding-usd',
         ],
         [

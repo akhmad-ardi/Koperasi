@@ -44,7 +44,7 @@ class Anggota extends Model
 
     public function pinjaman()
     {
-        return $this->hasMany(Pinjaman::class, 'id_anggota', 'id');
+        return $this->hasOne(Pinjaman::class, 'id_anggota', 'id');
     }
 
     public function simpanan()

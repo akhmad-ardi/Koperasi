@@ -32,7 +32,6 @@
                                 <th class="text-center">Nama</th>
                                 <th class="text-center">Jenis Simpanan</th>
                                 <th class="text-center">Jumlah Simpanan</th>
-                                <th class="text-center">Tanggal</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -40,11 +39,10 @@
                             @foreach ($simpanan as $s)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $s->anggota->no_angggota }}</td>
+                                    <td>{{ $s->anggota->no_anggota }}</td>
                                     <td>{{ $s->anggota->nama }}</td>
                                     <td>{{ $s->jenis_simpanan }}</td>
-                                    <td>{{ $s->jumlah_simpanan }}</td>
-                                    <td>{{ $s->tgl_simpanan }}</td>
+                                    <td>{{ $s->total_simpanan }}</td>
                                     <td class="text-center">
                                         {{-- Detail --}}
                                         <x-adminlte-button label="Detail" theme="info" icon="fas fa-fw fa-user"
