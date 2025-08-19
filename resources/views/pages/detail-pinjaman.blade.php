@@ -41,15 +41,75 @@
                 <i class="fa fa-fw fa-arrow-left"></i>
                 Kembali
             </a>
-            <a href="{{ route('admin.bayar-angsuran', ['id_anggota' => $anggota->id]) }}" class="btn btn-primary">
+            <a href="{{ route('admin.bayar-angsuran', ['id_anggota' => $anggota->id]) }}" class="btn btn-info">
                 <i class="fa fa-fw fa-hand-holding-usd"></i>
                 Bayar Angsuran
+            </a>
+            <a href="{{ route('admin.tambah-pinjaman') }}" class="btn btn-primary">
+                <i class="fa fa-fw fa-hand-holding-usd"></i>
+                Tambah Pinjaman
             </a>
         </div>
     </div>
 
     <div class="row">
         <div class="col">
+            <h3 class="text-center">Pinjaman</h3>
+
+            <div class="card">
+                <div class="card-body">
+                    <table id="anggotaTable" class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th class="text-center">Nomor</th>
+                                <th class="text-center">Tanggal Pinjaman</th>
+                                <th class="text-center">Jumlah Pinjaman</th>
+                                <th class="text-center">Jaminan</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($anggota->pinjaman as $p)
+                                <tr>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
+                                    <td>{{ $p->tgl_pinjaman }}</td>
+                                    <td>{{ $p->jumlah_pinjaman }}</td>
+                                    <td>{{ $p->jaminan }}</td>
+                                    <td>{{ $p->status }}</td>
+                                    <td class="text-center">
+                                        <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
+                                            data-toggle="modal" data-target="#modalHapus{{ $p->id }}" />
+
+                                        <x-adminlte-modal id="modalHapus{{ $p->id }}" title="Hapus Data"
+                                            theme="danger" icon="fas fa-fw fa-trash" size='md'>
+                                            <p>Apakah anda ingin menghapus data ini ?</p>
+                                            <x-slot name="footerSlot">
+                                                <form
+                                                    action="{{ route('delete.hapus-pinjaman', ['id_pinjaman' => $p->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-adminlte-button type="button" theme="outline-danger"
+                                                        label="Batal Hapus" data-dismiss="modal" />
+                                                    <x-adminlte-button type="submit" theme="danger"
+                                                        icon="fas fa-fw fa-trash" label="Hapus" />
+                                                </form>
+                                            </x-slot>
+                                        </x-adminlte-modal>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <h3 class="text-center">Angsuran</h3>
             <div class="card">
                 <div class="card-body">
                     <table id="anggotaTable" class="table table-bordered table-striped">

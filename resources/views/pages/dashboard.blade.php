@@ -56,7 +56,7 @@
         <div class="col-md-4">
             <div class="small-box bg-warning">
                 <div class="inner">
-                    <h3>{{ $total_penarikan }}</h3>
+                    <h3>{{ $total_pinjaman }}</h3>
                     <p>Total Pinjaman</p>
                 </div>
                 <div class="icon">

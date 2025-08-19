@@ -12,11 +12,21 @@
     </form>
 
     <div class="row mb-3">
-        <div class="col">
+        <div class="col-md-2">
             <a href="{{ route('admin.tambah-penarikan') }}" class="btn btn-primary">
                 <i class="fas fa-fw fa-plus"></i>
                 Tambah Data
             </a>
+        </div>
+        <div class="col-md-5">
+            <form method="GET" action="{{ route('admin.penarikan') }}">
+                <x-adminlte-input name="nama" placeholder="Cari nama angggota..." igroup-size="md"
+                    value="{{ request('nama') }}">
+                    <x-slot name="appendSlot">
+                        <x-adminlte-button type="submit" theme="outline-primary" label="Search" />
+                    </x-slot>
+                </x-adminlte-input>
+            </form>
         </div>
     </div>
 

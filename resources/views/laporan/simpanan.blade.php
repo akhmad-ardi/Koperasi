@@ -43,9 +43,9 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($anggota as $i => $a)
+            @foreach ($anggota as $a)
                 <tr>
-                    <td>{{ $i + 1 }}</td>
+                    <td>{{ $loop->iteration }}</td>
                     <td>{{ $a->no_anggota }}</td>
                     <td>{{ $a->nama }}</td>
                     <td>Rp {{ number_format($a->simpanan->sum('jumlah_simpanan'), 0, ',', '.') }}</td>

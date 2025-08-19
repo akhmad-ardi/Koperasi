@@ -21,7 +21,7 @@
                         @method('POST')
                         <div class="mb-3">
                             <x-adminlte-select name="id_anggota" label="Nomor Anggota">
-                                <option value="" selected disabled>Pilih Sekolah</option>
+                                <option value="" selected disabled>Pilih Anggota</option>
                                 @foreach ($anggota as $a)
                                     <option value="{{ $a->id }}" data-nama="{{ $a->nama }}"
                                         {{ old('id') == $a->id ? 'selected' : '' }}>

@@ -30,10 +30,12 @@
 </head>
 
 <body>
-    <h2>Laporan Pinjaman Anggota</h2>
+    <h2 style="text-align: center">Laporan Pinjaman Anggota</h2>
     <table border="1" cellpadding="5" cellspacing="0" width="100%">
         <thead>
             <tr>
+                <th>No.</th>
+                <th>Nomor Anggota</th>
                 <th>Nama Anggota</th>
                 <th>Total Pinjaman</th>
                 <th>Total Angsuran</th>
@@ -43,6 +45,8 @@
         <tbody>
             @foreach ($anggota as $a)
                 <tr>
+                    <td>{{ $loop->iteration }}</td>
+                    <td>{{ $a->no_anggota }}</td>
                     <td>{{ $a->nama }}</td>
                     <td>Rp {{ number_format($a->total_pinjaman, 0, ',', '.') }}</td>
                     <td>Rp {{ number_format($a->total_angsuran, 0, ',', '.') }}</td>

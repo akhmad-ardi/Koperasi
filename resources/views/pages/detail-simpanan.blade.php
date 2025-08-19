@@ -51,9 +51,13 @@
                 <i class="fa fa-fw fa-arrow-left"></i>
                 Kembali
             </a>
-            <a href="{{ route('admin.tambah-simpanan') }}" class="btn btn-primary">
+            <a href="{{ route('admin.tambah-simpanan') }}" class="btn btn-info">
                 <i class="fa fa-fw fa-plus"></i>
                 Tambah Simpanan
+            </a>
+            <a href="{{ route('admin.tambah-penarikan') }}" class="btn btn-primary">
+                <i class="fa fa-fw fa-plus"></i>
+                Tambah Penarikan
             </a>
         </div>
     </div>

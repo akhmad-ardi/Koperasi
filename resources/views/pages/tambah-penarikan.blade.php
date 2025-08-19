@@ -20,7 +20,7 @@
                         @method('POST')
                         <div class="mb-3">
                             <x-adminlte-select id="id_anggota" name="id_anggota" label="Nomor Anggota">
-                                <option value="" selected disabled>Pilih Nomor Anggota</option>
+                                <option value="" selected disabled>Pilih Anggota</option>
                                 @foreach ($anggota as $a)
                                     <option value="{{ $a->id }}" data-nama="{{ $a->nama }}"
                                         data-simpanan='@json($a->simpanan->groupBy('jenis_simpanan')->map->sum('jumlah_simpanan'))'

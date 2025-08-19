@@ -57,7 +57,10 @@ Route::prefix("admin")
             Route::get("/tambah", [AdminController::class, "HalamanTambahAnggota"])->name("admin.tambah-anggota");
             Route::post('/tambah', [AdminController::class, 'TambahAnggota'])->name('post.tambah-anggota');
 
-            Route::delete("/hapus/{id_anggota}", [AdminController::class, "HapusAnggota"])->name("post.edit-anggota");
+            Route::get("/edit/{id_anggota}", [AdminController::class, "HalamanEditAnggota"])->name("admin.edit-anggota");
+            Route::put("/edit/{id_anggota}", [AdminController::class, "EditAnggota"])->name("put.edit-anggota");
+
+            Route::delete("/hapus/{id_anggota}", [AdminController::class, "HapusAnggota"])->name("delete.hapus-anggota");
         })->middleware(AdminMiddleware::class);
 
         /**
@@ -84,7 +87,7 @@ Route::prefix("admin")
             Route::get("/tambah", [AdminController::class, "HalamanTambahPinjaman"])->name("admin.tambah-pinjaman");
             Route::post('/tambah', [AdminController::class, 'TambahPinjaman'])->name('post.tambah-pinjaman');
 
-            Route::delete("/hapus/{ig_anggota}", [AdminController::class, ""])->name("delete.hapus-pinjaman");
+            Route::delete("/hapus/{id_pinjaman}", [AdminController::class, "HapusPinjaman"])->name("delete.hapus-pinjaman");
 
             Route::get('/bayar-angsuran/{id_anggota}', [AdminController::class, "HalamanBayarAngsuran"])->name('admin.bayar-angsuran');
             Route::post('/bayar-angsuran/{id_anggota}', [AdminController::class, "BayarAngsuran"])->name('post.bayar-angsuran');

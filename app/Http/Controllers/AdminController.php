@@ -20,9 +20,9 @@ class AdminController extends Controller
     {
         $total_sekolah = Sekolah::all()->count();
         $total_anggota = Anggota::all()->count();
-        $total_simpanan = Helper::stringToRupiah(Simpanan::sum('jumlah_simpanan'));
+        $total_simpanan = Helper::stringToRupiah(Simpanan::sum('jumlah_simpanan') - Penarikan::sum('jumlah_penarikan'));
         $total_pinjaman = Helper::stringToRupiah(Pinjaman::sum('jumlah_pinjaman'));
-        $total_angsuran = Helper::stringToRupiah(Angsuran::sum('jumlah_angsuran'));
+        $total_angsuran = Helper::stringToRupiah(Angsuran::sum('total_angsuran'));
         $total_penarikan = Helper::stringToRupiah(Penarikan::sum('jumlah_penarikan'));
 
         return view('pages.dashboard', [
@@ -35,9 +35,19 @@ class AdminController extends Controller
         ]);
     }
 
-    public function HalamanSekolah()
+    public function HalamanSekolah(Request $request)
     {
-        $sekolah = Sekolah::all();
+        $keyword = $request->input('nama');
+
+        // query sekolah
+        $sekolahQuery = Sekolah::query();
+
+        if (!empty($keyword)) {
+            $sekolahQuery->where('nama_sekolah', 'LIKE', "%{$keyword}%");
+        }
+
+        // ambil semua anggota sesuai filter
+        $sekolah = $sekolahQuery->get();
 
         return view('pages.sekolah', [
             'sekolah' => $sekolah
@@ -111,9 +121,18 @@ class AdminController extends Controller
             ->with('msg_success', $sekolah['nama_sekolah'] . ' Berhasil Dihapus');
     }
 
-    public function HalamanAnggota()
+    public function HalamanAnggota(Request $request)
     {
-        $anggota = Anggota::all();
+        $keyword = $request->input('nama');
+
+        // query anggota
+        $anggotaQuery = Anggota::query();
+
+        if (!empty($keyword)) {
+            $anggotaQuery->where('nama', 'LIKE', "%{$keyword}%");
+        }
+
+        $anggota = $anggotaQuery->get();
 
         foreach ($anggota as $a) {
             $a->tgl_lahir = Helper::getTanggalAttribute($a->tgl_lahir);
@@ -137,6 +156,23 @@ class AdminController extends Controller
 
         return view("pages.detail-anggota", [
             'anggota' => $anggota
+        ]);
+    }
+
+    public function HalamanEditAnggota(string $id_anggota)
+    {
+        $sekolah = Sekolah::all();
+
+        $anggota = Anggota::where("id", "=", $id_anggota)->first();
+        if (!$anggota) {
+            return redirect()
+                ->route('admin.anggota')
+                ->with('msg_error', 'Anggota tidak ditemukan');
+        }
+
+        return view("pages.edit-anggota", [
+            'anggota' => $anggota,
+            'sekolah' => $sekolah
         ]);
     }
 
@@ -164,8 +200,15 @@ class AdminController extends Controller
             'nik' => 'required|numeric|digits:16|unique:anggota,nik',
             'nip' => 'required|numeric|digits_between:5,20',
             'foto_diri' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'status' => 'required|string|max:50',
+            'status' => 'required|string|in:aktif,nonaktif',
         ]);
+
+        $anggotaAlreadyExist = Anggota::where("no_anggota", "=", $request->no_anggota)->first();
+        if ($anggotaAlreadyExist) {
+            return redirect()
+                ->route('admin.tambah-anggota')
+                ->with('msg_error', 'Nommor Anggota Sudah Ada');
+        }
 
         $fotoPath = null;
         if ($request->hasFile('foto_diri')) {
@@ -195,6 +238,62 @@ class AdminController extends Controller
             ->with('msg_success', 'Anggota Berhasil Ditambahkan');
     }
 
+    public function EditAnggota(Request $request, string $id_anggota)
+    {
+        $request->validate([
+            'no_anggota' => 'required|string|max:50',
+            'nama' => 'required|string|max:255',
+            'id_sekolah' => 'required|exists:sekolah,id',
+            'jenis_kelamin' => 'required|in:laki-laki,perempuan',
+            'tempat_lahir' => 'required|string|max:100',
+            'tgl_lahir' => 'required|date',
+            'pekerjaan' => 'required|string|max:100',
+            'no_telepon' => 'required|string|max:15',
+            'alamat' => 'required|string|max:255',
+            'nik' => 'required|numeric|digits:16',
+            'nip' => 'required|numeric|digits_between:5,20',
+            'foto_diri' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'status' => 'required|string|in:aktif,nonaktif',
+        ]);
+
+        $anggota = Anggota::findOrFail($id_anggota);
+
+        $anggotaAlreadyExist = Anggota::where('no_anggota', $request->no_anggota)
+            ->where('id', '!=', $id_anggota) // <- ini penting, agar tidak bentrok dengan dirinya sendiri
+            ->first();
+
+        if ($anggotaAlreadyExist) {
+            return redirect()
+                ->route('admin.edit-anggota', $id_anggota) // redirect balik ke form edit
+                ->with('msg_error', 'Nomor Anggota sudah digunakan anggota lain');
+        }
+
+        if ($request->hasFile('foto_diri')) {
+            $fotoPath = $request->file('foto_diri')->store('foto', 'public');
+
+            $anggota->foto_diri = $fotoPath;
+        }
+
+        $anggota->no_anggota = $request->no_anggota;
+        $anggota->nama = $request->nama;
+        $anggota->id_sekolah = $request->id_sekolah;
+        $anggota->jenis_kelamin = $request->jenis_kelamin;
+        $anggota->tempat_lahir = $request->tempat_lahir;
+        $anggota->tgl_lahir = $request->tgl_lahir;
+        $anggota->pekerjaan = $request->pekerjaan;
+        $anggota->no_telepon = $request->no_telepon;
+        $anggota->alamat = $request->alamat;
+        $anggota->nik = $request->nik;
+        $anggota->nip = $request->nip;
+        $anggota->status = $request->status;
+
+        $anggota->save();
+
+        return redirect()
+            ->route('admin.anggota')
+            ->with("msg_success", "Anggota Berhasil Diubah");
+    }
+
     public function HapusAnggota(string $id_anggota)
     {
         $delete_anggota = Anggota::where('id', '=', $id_anggota)->delete();
@@ -209,9 +308,20 @@ class AdminController extends Controller
             ->with('msg_success', "Anggota Berhasil Dihapus");
     }
 
-    public function HalamanSimpanan()
+    public function HalamanSimpanan(Request $request)
     {
-        $anggota = Anggota::all();
+        // ambil keyword dari input form pencarian
+        $keyword = $request->input('nama');
+
+        // query anggota (jika ada pencarian nama)
+        $anggotaQuery = Anggota::query();
+
+        if (!empty($keyword)) {
+            $anggotaQuery->where('nama', 'LIKE', "%{$keyword}%");
+        }
+
+        $anggota = $anggotaQuery->get();
+
 
         foreach ($anggota as $a) {
             // hitung simpanan per jenis
@@ -220,14 +330,14 @@ class AdminController extends Controller
             $simpanan_sukarela = $a->simpanan->where('jenis_simpanan', '=', 'sukarela')->sum('jumlah_simpanan');
 
             // hitung penarikan per jenis
-            $penarikan_pokok = $a->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
-            $penarikan_wajib = $a->penarikan->where('jenis_simpanan', '=', 'wajib')->sum('jumlah_simpanan');
-            $penarikan_sukarela = $a->penarikan->where('jenis_simpanan', '=', 'sukarela')->sum('jumlah_simpanan');
+            $penarikan_pokok = $a->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_penarikan');
+            $penarikan_wajib = $a->penarikan->where('jenis_simpanan', '=', 'wajib')->sum('jumlah_penarikan');
+            $penarikan_sukarela = $a->penarikan->where('jenis_simpanan', '=', 'sukarela')->sum('jumlah_penarikan');
 
             // saldo per jenis untuk anggota ini
-            $saldo_pokok = $simpanan_pokok - $penarikan_pokok;
-            $saldo_wajib = $simpanan_wajib - $penarikan_wajib;
-            $saldo_sukarela = $simpanan_sukarela - $penarikan_sukarela;
+            $saldo_pokok = max(0, $simpanan_pokok - $penarikan_pokok);
+            $saldo_wajib = max(0, $simpanan_wajib - $penarikan_wajib);
+            $saldo_sukarela = max(0, $simpanan_sukarela - $penarikan_sukarela);
 
             // simpan ke object anggota (biar bisa dipakai di view)
             $a->saldo_pokok = Helper::stringToRupiah($saldo_pokok);
@@ -248,14 +358,14 @@ class AdminController extends Controller
         $total_simpanan_wajib = $anggota->simpanan->where('jenis_simpanan', '=', 'wajib')->sum('jumlah_simpanan');
         $total_simpanan_sukarela = $anggota->simpanan->where('jenis_simpanan', '=', 'sukarela')->sum('jumlah_simpanan');
 
-        $total_penarikan_pokok = $anggota->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
-        $total_penarikan_wajib = $anggota->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
-        $total_penarikan_sukarela = $anggota->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
+        $total_penarikan_pokok = $anggota->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_penarikan');
+        $total_penarikan_wajib = $anggota->penarikan->where('jenis_simpanan', '=', 'wajib')->sum('jumlah_penarikan');
+        $total_penarikan_sukarela = $anggota->penarikan->where('jenis_simpanan', '=', 'sukarela')->sum('jumlah_penarikan');
 
         // total per jenis
-        $saldo_pokok = $total_simpanan_pokok - $total_penarikan_pokok;
-        $saldo_wajib = $total_simpanan_wajib - $total_penarikan_wajib;
-        $saldo_sukarela = $total_simpanan_sukarela - $total_penarikan_sukarela;
+        $saldo_pokok = max(0, $total_simpanan_pokok - $total_penarikan_pokok);
+        $saldo_wajib = max(0, $total_simpanan_wajib - $total_penarikan_wajib);
+        $saldo_sukarela = max(0, $total_simpanan_sukarela - $total_penarikan_sukarela);
 
         foreach ($anggota->simpanan as $s) {
             $s->tgl_simpanan = Helper::getTanggalAttribute($s->tgl_simpanan);
@@ -309,9 +419,20 @@ class AdminController extends Controller
             ->with('msg_success', 'Berhasil menghapus data');
     }
 
-    public function HalamanPinjaman()
+    public function HalamanPinjaman(Request $request)
     {
         $anggota = Anggota::all();
+
+        $keyword = $request->input('nama');
+
+        // query anggota
+        $anggotaQuery = Anggota::query();
+
+        if (!empty($keyword)) {
+            $anggotaQuery->where('nama', 'LIKE', "%{$keyword}%");
+        }
+
+        $anggota = $anggotaQuery->get();
 
         foreach ($anggota as $a) {
             $total_pinjaman = $a->pinjaman->sum('jumlah_pinjaman');
@@ -342,6 +463,11 @@ class AdminController extends Controller
             $a->total_angsuran = Helper::stringToRupiah($a->total_angsuran);
             $a->jasa = Helper::stringToRupiah($a->jasa);
             $a->tgl_angsuran = Helper::getTanggalAttribute($a->tgl_angsuran);
+        }
+
+        foreach ($anggota->pinjaman as $p) {
+            $p->jumlah_pinjaman = Helper::stringToRupiah($p->jumlah_pinjaman);
+            $p->tgl_pinjaman = Helper::getTanggalAttribute($p->tgl_pinjaman);
         }
 
         return view("pages.detail-pinjaman", [
@@ -378,9 +504,9 @@ class AdminController extends Controller
     public function HapusPinjaman(string $id_pinjaman)
     {
         $pinjaman = Pinjaman::where("id", "=", $id_pinjaman)->first();
-        if (!$pinjaman || $pinjaman->delete()) {
+        if (!$pinjaman || !$pinjaman->delete()) {
             return redirect()
-                ->route('admin.detail-pinjaman', ['id_pinjaman' => $id_pinjaman])
+                ->route('admin.detail-pinjaman', ['id_anggota' => $pinjaman->id_anggota])
                 ->with('msg_error', 'Gagal menghapus pinjaman');
         }
 
@@ -446,9 +572,20 @@ class AdminController extends Controller
             ->with('msg_success', "Berhasil menghapus angsuran");
     }
 
-    public function HalamanPenarikan()
+    public function HalamanPenarikan(Request $request)
     {
         $anggota = Anggota::all();
+
+        $keyword = $request->input('nama');
+
+        // query anggota
+        $anggotaQuery = Anggota::query();
+
+        if (!empty($keyword)) {
+            $anggotaQuery->where('nama', 'LIKE', "%{$keyword}%");
+        }
+
+        $anggota = $anggotaQuery->get();
 
         foreach ($anggota as $a) {
             // hitung simpanan per jenis
@@ -604,11 +741,12 @@ class AdminController extends Controller
     {
         $anggota = Anggota::with(['pinjaman', 'angsuran'])->get()->map(function ($a) {
             $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
-            $totalAngsuran = $a->angsuran->sum('jumlah_angsuran');
+            $jumlahAngsuran = $a->angsuran->sum('jumlah_angsuran');
+            $totalAngsuran = $a->angsuran->sum('total_angsuran');
 
             $a->total_pinjaman = (float) $totalPinjaman;
             $a->total_angsuran = (float) $totalAngsuran;
-            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $totalAngsuran;
+            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $jumlahAngsuran;
 
             return $a;
         });
@@ -622,11 +760,12 @@ class AdminController extends Controller
     {
         $anggota = Anggota::with(['pinjaman', 'angsuran'])->get()->map(function ($a) {
             $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
-            $totalAngsuran = $a->angsuran->sum('jumlah_angsuran');
+            $jumlahAngsuran = $a->angsuran->sum('jumlah_angsuran');
+            $totalAngsuran = $a->angsuran->sum('total_angsuran');
 
             $a->total_pinjaman = (float) $totalPinjaman;
             $a->total_angsuran = (float) $totalAngsuran;
-            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $totalAngsuran;
+            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $jumlahAngsuran;
 
             return $a;
         });

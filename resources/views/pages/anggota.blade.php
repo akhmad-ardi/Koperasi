@@ -12,11 +12,21 @@
     </form>
 
     <div class="row mb-3">
-        <div class="col">
+        <div class="col-md-2">
             <a href="{{ route('admin.tambah-anggota') }}" class="btn btn-primary">
                 <i class="fas fa-fw fa-plus"></i>
                 Tambah Anggota
             </a>
+        </div>
+        <div class="col-md-5">
+            <form method="GET" action="{{ route('admin.anggota') }}">
+                <x-adminlte-input name="nama" placeholder="Cari nama angggota..." igroup-size="md"
+                    value="{{ request('nama') }}">
+                    <x-slot name="appendSlot">
+                        <x-adminlte-button type="submit" theme="outline-primary" label="Search" />
+                    </x-slot>
+                </x-adminlte-input>
+            </form>
         </div>
     </div>
 
@@ -52,6 +62,12 @@
                                             <i class="fa fa-fw fa-user"></i>
                                         </a>
 
+                                        {{-- Edit --}}
+                                        <a href="{{ route('admin.edit-anggota', ['id_anggota' => $a->id]) }}"
+                                            class="btn btn-primary mr-1">
+                                            <i class="fa fa-fw fa-pen"></i>
+                                        </a>
+
                                         {{-- Hapus --}}
                                         <x-adminlte-button label="" theme="danger" icon="fas fa-fw fa-trash"
                                             data-toggle="modal" data-target="#modalHapus" />
@@ -59,14 +75,18 @@
                                         <x-adminlte-modal id="modalHapus" title="Hapus Data" theme="danger"
                                             icon="fas fa-fw fa-trash" size='md'>
                                             <p>Apakah anda ingin menghapus data ini ?</p>
-                                            <form action="">
-                                                <x-slot name="footerSlot">
+                                            <x-slot name="footerSlot">
+                                                <form
+                                                    action="{{ route('delete.hapus-anggota', ['id_anggota' => $a->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
                                                     <x-adminlte-button type="button" theme="outline-danger"
                                                         label="Batal Hapus" data-dismiss="modal" />
                                                     <x-adminlte-button type="submit" theme="danger"
                                                         icon="fas fa-fw fa-trash" label="Hapus" />
-                                                </x-slot>
-                                            </form>
+                                                </form>
+                                            </x-slot>
                                         </x-adminlte-modal>
                                     </td>
                                 </tr>
