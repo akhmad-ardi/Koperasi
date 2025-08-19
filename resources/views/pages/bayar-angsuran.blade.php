@@ -15,14 +15,12 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('post.bayar-angsuran', ['id_pinjaman' => $angsuran->pinjaman->id]) }}"
-                        method="POST">
+                    <form action="{{ route('post.bayar-angsuran', ['id_anggota' => $anggota->id]) }}" method="POST">
                         @csrf
                         @method('POST')
                         <div class="mb-3">
                             <x-adminlte-input name="pinjaman" id="pinjaman" label="Pinjaman Saat Ini" type="text"
-                                placeholder="Pinjaman Saat Ini" value="{{ $angsuran->pinjaman->jumlah_pinjaman }}"
-                                disabled />
+                                placeholder="Pinjaman Saat Ini" value="{{ $total_pinjaman }}" disabled />
                         </div>
 
                         <div class="mb-3">
@@ -58,7 +56,7 @@
                         </div>
 
                         <div class="mb-3 text-right">
-                            <a href="{{ route('admin.detail-pinjaman', ['id_pinjaman' => $angsuran->pinjaman->id]) }}"
+                            <a href="{{ route('admin.detail-pinjaman', ['id_anggota' => $anggota->id]) }}"
                                 class="btn btn-outline-primary">Kembali</a>
 
                             <x-adminlte-button type="submit" theme="primary" label="Simpan" />

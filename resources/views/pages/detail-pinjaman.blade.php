@@ -18,17 +18,17 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <x-adminlte-input name="no_anggota" label="Nomor Anggota" type="text" placeholder="Nama Anggta"
-                            value="{{ $detail_pinjaman->anggota->no_anggota }}" disabled />
+                            value="{{ $anggota->no_anggota }}" disabled />
                     </div>
 
                     <div class="mb-3">
                         <x-adminlte-input name="nama" label="Nama" type="text" placeholder="Nama"
-                            value="{{ $detail_pinjaman->anggota->nama }}" disabled />
+                            value="{{ $anggota->nama }}" disabled />
                     </div>
 
                     <div class="mb-3">
                         <x-adminlte-input name="jumlah_pinjaman" label="Jumlah Pinjaman" type="text"
-                            placeholder="Jumlah Pinjaman" value="{{ $detail_pinjaman->jumlah_pinjaman }}" disabled />
+                            placeholder="Jumlah Pinjaman" value="{{ $total_pinjaman }}" disabled />
                     </div>
                 </div>
             </div>
@@ -41,7 +41,7 @@
                 <i class="fa fa-fw fa-arrow-left"></i>
                 Kembali
             </a>
-            <a href="{{ route('admin.bayar-angsuran', ['id_pinjaman' => $detail_pinjaman->id]) }}" class="btn btn-primary">
+            <a href="{{ route('admin.bayar-angsuran', ['id_anggota' => $anggota->id]) }}" class="btn btn-primary">
                 <i class="fa fa-fw fa-hand-holding-usd"></i>
                 Bayar Angsuran
             </a>
@@ -57,25 +57,45 @@
                             <tr>
                                 <th class="text-center">Nomor</th>
                                 <th class="text-center">Angsuran Ke</th>
-                                <th class="text-center">No. Anggota</th>
-                                <th class="text-center">Nama</th>
                                 <th class="text-center">Tanggal Angsuran</th>
                                 <th class="text-center">Jumlah Angsuran</th>
                                 <th class="text-center">Jasa</th>
                                 <th class="text-center">Total Angsuran</th>
+                                <th class="text-center">Status</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($detail_pinjaman->angsuran as $a)
+                            @foreach ($anggota->angsuran as $a)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $a->angsuran_ke }}</td>
-                                    <td>{{ $a->pinjaman->anggota->no_anggota }}</td>
-                                    <td>{{ $a->pinjaman->anggota->nama }}</td>
                                     <td>{{ $a->tgl_angsuran }}</td>
                                     <td>{{ $a->jumlah_angsuran }}</td>
                                     <td>{{ $a->jasa }}</td>
                                     <td>{{ $a->total_angsuran }}</td>
+                                    <td>{{ $a->status }}</td>
+                                    <td class="text-center">
+                                        <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
+                                            data-toggle="modal" data-target="#modalHapus{{ $a->id }}" />
+
+                                        <x-adminlte-modal id="modalHapus{{ $a->id }}" title="Hapus Data"
+                                            theme="danger" icon="fas fa-fw fa-trash" size='md'>
+                                            <p>Apakah anda ingin menghapus data ini ?</p>
+                                            <x-slot name="footerSlot">
+                                                <form
+                                                    action="{{ route('delete.hapus-angsuran', ['id_angsuran' => $a->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-adminlte-button type="button" theme="outline-danger"
+                                                        label="Batal Hapus" data-dismiss="modal" />
+                                                    <x-adminlte-button type="submit" theme="danger"
+                                                        icon="fas fa-fw fa-trash" label="Hapus" />
+                                                </form>
+                                            </x-slot>
+                                        </x-adminlte-modal>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -94,6 +114,16 @@
     @if (session('msg_success'))
         <script>
             toastr.success("{{ session('msg_success') }}", {
+                timeOut: 3000,
+                closeButton: true,
+                progressBar: true
+            });
+        </script>
+    @endif
+
+    @if (session('msg_error'))
+        <script>
+            toastr.error("{{ session('msg_error') }}", {
                 timeOut: 3000,
                 closeButton: true,
                 progressBar: true

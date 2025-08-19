@@ -23,8 +23,7 @@ class Penarikan extends Model
         'id_anggota',
         'tgl_penarikan',
         'jenis_simpanan',
-        'jumlah_penarikan',
-        'keterangan',
+        'jumlah_penarikan'
     ];
 
     // Relasi ke anggota

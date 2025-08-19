@@ -13,7 +13,7 @@ class Angsuran extends Model
     protected $primaryKey = 'id';
     public $timestamps = false; // karena tabel ini tidak punya created_at/updated_at
     protected $fillable = [
-        'id_pinjaman',
+        'id_anggota',
         'tgl_angsuran',
         'jumlah_angsuran',
         'jasa',
@@ -24,17 +24,20 @@ class Angsuran extends Model
     protected static function booted()
     {
         static::creating(function ($angsuran) {
-            // Ambil nomor angsuran terakhir untuk pinjaman ini
-            $lastNumber = self::where('id_pinjaman', $angsuran->id_pinjaman)
+            // Ambil nomor angsuran terakhir untuk anggota ini
+            $lastNumber = self::where('id_anggota', $angsuran->id_anggota)
                 ->max('angsuran_ke');
 
             // Kalau belum ada, mulai dari 1
             $angsuran->angsuran_ke = $lastNumber ? $lastNumber + 1 : 1;
+
+            // Hitung total angsuran
+            $angsuran->total_angsuran = $angsuran->jumlah_angsuran + ($angsuran->jasa ?? 0);
         });
     }
 
-    public function pinjaman()
+    public function anggota()
     {
-        return $this->belongsTo(Pinjaman::class, 'id_pinjaman');
+        return $this->belongsTo(Anggota::class, 'id_anggota');
     }
 }

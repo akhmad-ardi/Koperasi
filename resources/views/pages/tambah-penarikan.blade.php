@@ -6,7 +6,6 @@
     <h1>Tambah Data Penarikan</h1>
 @stop
 
-
 @section('content')
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
@@ -59,11 +58,6 @@
                         <div class="mb-3">
                             <x-adminlte-input name="jumlah_penarikan" label="Jumlah Penarikan" type="number"
                                 placeholder="Jumlah Penarikan" />
-                        </div>
-
-                        <div class="mb-3">
-                            <x-adminlte-input name="keterangan" label="Keterangan" type="text"
-                                placeholder="Keterangan" />
                         </div>
 
                         <div class="mb-3 text-right">

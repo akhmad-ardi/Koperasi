@@ -18,27 +18,27 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <x-adminlte-input name="no_anggota" label="Nomor Anggota" type="text" placeholder="Nama Anggta"
-                            value="{{ $penarikan[0]->anggota->no_anggota }}" disabled />
+                            value="{{ $anggota->no_anggota }}" disabled />
                     </div>
 
                     <div class="mb-3">
                         <x-adminlte-input name="nama" label="Nama" type="text" placeholder="Nama"
-                            value="{{ $penarikan[0]->anggota->nama }}" disabled />
+                            value="{{ $anggota->nama }}" disabled />
                     </div>
 
                     <div class="mb-3">
-                        <x-adminlte-input name="total_penarikan_pokok" label="Total Penarikan Pokok" type="text"
-                            placeholder="Total Penarikan Pokok" value="{{ $total_penarikan_pokok }}" disabled />
+                        <x-adminlte-input name="penarikan_pokok" label="Total Penarikan Pokok" type="text"
+                            placeholder="Total Penarikan Pokok" value="{{ $penarikan_pokok }}" disabled />
                     </div>
 
                     <div class="mb-3">
-                        <x-adminlte-input name="total_penarikan_wajib" label="Total Penarikan Wajib" type="text"
-                            placeholder="Total Penarikan Wajib" value="{{ $total_penarikan_wajib }}" disabled />
+                        <x-adminlte-input name="penarikan_wajib" label="Total Penarikan Wajib" type="text"
+                            placeholder="Total Penarikan Wajib" value="{{ $penarikan_wajib }}" disabled />
                     </div>
 
                     <div class="mb-3">
-                        <x-adminlte-input name="total_penarikan_sukarela" label="Total Penarikan Sukarela" type="text"
-                            placeholder="Total Penarikan Sukarela" value="{{ $total_penarikan_sukarela }}" disabled />
+                        <x-adminlte-input name="penarikan_sukarela" label="Total Penarikan Sukarela" type="text"
+                            placeholder="Total Penarikan Sukarela" value="{{ $penarikan_sukarela }}" disabled />
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
 
     <div class="row mb-3">
         <div class="col">
-            <a href="{{ route('admin.simpanan') }}" class="btn btn-danger">
+            <a href="{{ route('admin.penarikan') }}" class="btn btn-danger">
                 <i class="fa fa-fw fa-arrow-left"></i>
                 Kembali
             </a>
@@ -69,15 +69,17 @@
                                 <th class="text-center">Tanggal Simpanan</th>
                                 <th class="text-center">Jenis Simpanan</th>
                                 <th class="text-center">Jumlah Simpanan</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($penarikan as $p)
+                            @foreach ($anggota->penarikan as $p)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $p->tgl_penarikan }}</td>
                                     <td>{{ $p->jenis_simpanan }}</td>
                                     <td>{{ $p->jumlah_penarikan }}</td>
+                                    <td></td>
                                 </tr>
                             @endforeach
                         </tbody>

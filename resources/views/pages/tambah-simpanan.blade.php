@@ -60,11 +60,6 @@
                                 placeholder="Jumlah Simpanan" value="{{ old('jumlah_simpanan') }}" />
                         </div>
 
-                        <div class="mb-3">
-                            <x-adminlte-input name="keterangan" label="Keterangan" type="text" placeholder="Keterangan"
-                                value="{{ old('keterangan') }}" />
-                        </div>
-
                         <div class="mb-3 text-right">
                             <a href="{{ route('admin.simpanan') }}" class="btn btn-outline-primary">Kembali</a>
 

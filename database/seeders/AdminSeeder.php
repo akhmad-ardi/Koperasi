@@ -24,5 +24,13 @@ class AdminSeeder extends Seeder
             "updated_at" => now(),
         ]);
 
+        User::factory()->create([
+            'username' => 'ketua',
+            'password' => Hash::make("123456"),
+            'role' => 'ketua',
+            "created_at" => now(),
+            "updated_at" => now(),
+        ]);
+
     }
 }

@@ -30,26 +30,22 @@
                                 <th class="text-center">Nomor</th>
                                 <th class="text-center">No. Anggota</th>
                                 <th class="text-center">Nama</th>
-                                <th class="text-center">Tanggal Pinjaman</th>
                                 <th class="text-center">Jumlah Pinjaman</th>
-                                <th class="text-center">Jaminan</th>
                                 <th class="text-center">Status</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pinjaman as $p)
+                            @foreach ($anggota as $a)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $p->anggota->no_anggota }}</td>
-                                    <td>{{ $p->anggota->nama }}</td>
-                                    <td>{{ $p->tgl_pinjaman }}</td>
-                                    <td>{{ $p->jumlah_pinjaman }}</td>
-                                    <td>{{ $p->jaminan }}</td>
-                                    <td>{{ $p->status }}</td>
+                                    <td>{{ $a->no_anggota }}</td>
+                                    <td>{{ $a->nama }}</td>
+                                    <td>{{ $a->total_pinjaman }}</td>
+                                    <td>{{ $a->status }}</td>
                                     <td class="text-center">
                                         {{-- Detail --}}
-                                        <a href="{{ route('admin.detail-pinjaman', ['id_pinjaman' => $p->id]) }}"
+                                        <a href="{{ route('admin.detail-pinjaman', ['id_anggota' => $a->id]) }}"
                                             class="btn btn-info">
                                             <i class="fas fa-fw fa-user"></i>
                                             Detail

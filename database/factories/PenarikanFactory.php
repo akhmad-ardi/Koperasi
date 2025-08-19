@@ -21,8 +21,7 @@ class PenarikanFactory extends Factory
             'id_anggota' => Anggota::factory(),
             'tgl_penarikan' => $this->faker->date(),
             'jenis_simpanan' => $this->faker->randomElement(['pokok', 'wajib', 'sukarela']),
-            'jumlah_penarikan' => $this->faker->numberBetween(10000, 500000),
-            'keterangan' => $this->faker->sentence(5),
+            'jumlah_penarikan' => $this->faker->numberBetween(10000, 500000)
         ];
     }
 }

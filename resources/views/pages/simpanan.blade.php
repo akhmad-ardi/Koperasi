@@ -30,22 +30,24 @@
                                 <th class="text-center">Nomor</th>
                                 <th class="text-center">No. Anggota</th>
                                 <th class="text-center">Nama</th>
-                                <th class="text-center">Jenis Simpanan</th>
-                                <th class="text-center">Jumlah Simpanan</th>
+                                <th class="text-center">Saldo Pokok</th>
+                                <th class="text-center">Saldo Wajib</th>
+                                <th class="text-center">Saldo Sukarela</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($simpanan as $s)
+                            @foreach ($anggota as $a)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $s->anggota->no_anggota }}</td>
-                                    <td>{{ $s->anggota->nama }}</td>
-                                    <td>{{ $s->jenis_simpanan }}</td>
-                                    <td>{{ $s->total_simpanan }}</td>
+                                    <td>{{ $a->no_anggota }}</td>
+                                    <td>{{ $a->nama }}</td>
+                                    <td>{{ $a->saldo_pokok }}</td>
+                                    <td>{{ $a->saldo_wajib }}</td>
+                                    <td>{{ $a->saldo_sukarela }}</td>
                                     <td class="text-center">
                                         {{-- Detail --}}
-                                        <a href="{{ route('admin.detail-simpanan', ['id_anggota' => $s->anggota->id]) }}"
+                                        <a href="{{ route('admin.detail-simpanan', ['id_anggota' => $a->id]) }}"
                                             class="btn btn-info">
                                             <i class="fa fa-fw fa-wallet"></i>
                                             Detail

@@ -30,23 +30,23 @@
                                 <th class="text-center">Nomor</th>
                                 <th class="text-center">No. Anggota</th>
                                 <th class="text-center">Nama</th>
-                                <th class="text-center">Jenis Simpanan</th>
-                                <th class="text-center">Jumlah Penarikan</th>
-                                <th class="text-center">Keterangan</th>
+                                <th class="text-center">Total Penarikan Pokok</th>
+                                <th class="text-center">Total Penarikan Wajib</th>
+                                <th class="text-center">Total Penarikan Sukarela</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($penarikan as $p)
+                            @foreach ($anggota as $a)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $p->anggota->no_anggota }}</td>
-                                    <td>{{ $p->anggota->nama }}</td>
-                                    <td>{{ $p->jenis_simpanan }}</td>
-                                    <td>{{ $p->jumlah_penarikan }}</td>
-                                    <td>{{ $p->keterangan }}</td>
+                                    <td>{{ $a->no_anggota }}</td>
+                                    <td>{{ $a->nama }}</td>
+                                    <td>{{ $a->total_penarikan_pokok }}</td>
+                                    <td>{{ $a->total_penarikan_wajib }}</td>
+                                    <td>{{ $a->total_penarikan_sukarela }}</td>
                                     <td>
-                                        <a href="{{ route('admin.detail-penarikan', ['id_anggota' => $p->anggota->id]) }}"
+                                        <a href="{{ route('admin.detail-penarikan', ['id_anggota' => $a->id]) }}"
                                             class="btn btn-info">
                                             <i class="fa fa-fw fa-hand-holding-usd"></i>
                                             Detail
