@@ -22,7 +22,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3 text-center">
-                                    <img src="/storage/foto/{{ $anggota->foto_diri }}" alt="Foto Diri" width="250"
+                                    <img src="/storage/{{ $anggota->foto_diri }}" alt="Foto Diri" width="250"
                                         height="300">
                                 </div>
                             </div>

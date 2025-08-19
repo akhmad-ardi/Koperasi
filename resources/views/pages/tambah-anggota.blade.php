@@ -97,8 +97,13 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <x-adminlte-input name="status" label="Status" type="text" placeholder="Status"
-                                        value="{{ old('status') }}" />
+                                    <x-adminlte-select name="status" label="Status">
+                                        <option value="" selected disabled>Pilih Status</option>
+                                        <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>
+                                            Aktif</option>
+                                        <option value="nonaktif" {{ old('status') == 'nonaktif' ? 'selected' : '' }}>
+                                            Nonaktif</option>
+                                    </x-adminlte-select>
                                 </div>
                             </div>
                         </div>

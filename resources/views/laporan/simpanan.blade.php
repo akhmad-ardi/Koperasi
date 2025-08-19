@@ -6,13 +6,13 @@
     <title>Laporan Simpanan</title>
     <style>
         body {
-            font-family: DejaVu Sans, sans-serif;
+            font-family: sans-serif;
             font-size: 12px;
         }
 
         table {
-            width: 100%;
             border-collapse: collapse;
+            width: 100%;
             margin-top: 20px;
         }
 
@@ -20,11 +20,11 @@
         td {
             border: 1px solid #000;
             padding: 6px;
-            text-align: center;
+            text-align: left;
         }
 
         th {
-            background: #eee;
+            background: #f2f2f2;
         }
     </style>
 </head>

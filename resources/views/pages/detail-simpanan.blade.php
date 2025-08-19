@@ -69,6 +69,7 @@
                                 <th class="text-center">Tanggal Simpanan</th>
                                 <th class="text-center">Jenis Simpanan</th>
                                 <th class="text-center">Jumlah Simpanan</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -78,6 +79,27 @@
                                     <td>{{ $s->tgl_simpanan }}</td>
                                     <td>{{ $s->jenis_simpanan }}</td>
                                     <td>{{ $s->jumlah_simpanan }}</td>
+                                    <td class="text-center">
+                                        <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
+                                            data-toggle="modal" data-target="#modalHapus{{ $s->id }}" />
+
+                                        <x-adminlte-modal id="modalHapus{{ $s->id }}" title="Hapus Data"
+                                            theme="danger" icon="fas fa-fw fa-trash" size='md'>
+                                            <p>Apakah anda ingin menghapus data ini ?</p>
+                                            <x-slot name="footerSlot">
+                                                <form
+                                                    action="{{ route('delete.hapus-simpanan', ['id_simpanan' => $s->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-adminlte-button type="button" theme="outline-danger"
+                                                        label="Batal Hapus" data-dismiss="modal" />
+                                                    <x-adminlte-button type="submit" theme="danger"
+                                                        icon="fas fa-fw fa-trash" label="Hapus" />
+                                                </form>
+                                            </x-slot>
+                                        </x-adminlte-modal>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

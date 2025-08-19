@@ -240,6 +240,36 @@ class AdminController extends Controller
         ]);
     }
 
+    public function HalamanDetailSimpanan(string $id_anggota)
+    {
+        $anggota = Anggota::where('id', '=', $id_anggota)->first();
+
+        $total_simpanan_pokok = $anggota->simpanan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
+        $total_simpanan_wajib = $anggota->simpanan->where('jenis_simpanan', '=', 'wajib')->sum('jumlah_simpanan');
+        $total_simpanan_sukarela = $anggota->simpanan->where('jenis_simpanan', '=', 'sukarela')->sum('jumlah_simpanan');
+
+        $total_penarikan_pokok = $anggota->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
+        $total_penarikan_wajib = $anggota->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
+        $total_penarikan_sukarela = $anggota->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
+
+        // total per jenis
+        $saldo_pokok = $total_simpanan_pokok - $total_penarikan_pokok;
+        $saldo_wajib = $total_simpanan_wajib - $total_penarikan_wajib;
+        $saldo_sukarela = $total_simpanan_sukarela - $total_penarikan_sukarela;
+
+        foreach ($anggota->simpanan as $s) {
+            $s->tgl_simpanan = Helper::getTanggalAttribute($s->tgl_simpanan);
+            $s->jumlah_simpanan = Helper::stringToRupiah($s->jumlah_simpanan);
+        }
+
+        return view("pages.detail-simpanan", [
+            "anggota" => $anggota,
+            'simpanan_pokok' => Helper::stringToRupiah($saldo_pokok),
+            'simpanan_wajib' => Helper::stringToRupiah($saldo_wajib),
+            'simpanan_sukarela' => Helper::stringToRupiah($saldo_sukarela),
+        ]);
+    }
+
     public function HalamanTambahSimpanan()
     {
         $anggota = Anggota::all();
@@ -261,35 +291,22 @@ class AdminController extends Controller
         Simpanan::create($validated);
 
         return redirect()
-            ->route('admin.anggota')
+            ->route('admin.simpanan')
             ->with('msg_success', 'Simpanan Berhasil Ditambahkan');
     }
 
-    public function HalamanDetailSimpanan(string $id_anggota)
+    public function HapusSimpanan(string $id_simpanan)
     {
-        $anggota = Anggota::where('id', '=', $id_anggota)->first();
-
-        // total per jenis
-        $saldo_pokok = $anggota->simpanan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan')
-            - $anggota->penarikan->where('jenis_simpanan', 'pokok')->sum('jumlah_penarikan');
-
-        $saldo_wajib = $anggota->simpanan->where('jenis_simpanan', '=', 'wajib')->sum('jumlah_simpanan')
-            - $anggota->penarikan->where('jenis_simpanan', 'wajib')->sum('jumlah_penarikan');
-
-        $saldo_sukarela = $anggota->simpanan->where('jenis_simpanan', '=', 'sukarela')->sum('jumlah_simpanan')
-            - $anggota->penarikan->where('jenis_simpanan', 'sukarela')->sum('jumlah_penarikan');
-
-        foreach ($anggota->simpanan as $s) {
-            $s->tgl_simpanan = Helper::getTanggalAttribute($s->tgl_simpanan);
-            $s->jumlah_simpanan = Helper::stringToRupiah($s->jumlah_simpanan);
+        $simpanan = Simpanan::where("id", "=", $id_simpanan)->first();
+        if (!$simpanan || $simpanan->delete()) {
+            return redirect()
+                ->route('admin.detail-simpanan', ['id_anggota' => $simpanan->id_anggota])
+                ->with('msg_error', 'Gagal menghapus data');
         }
 
-        return view("pages.detail-simpanan", [
-            "anggota" => $anggota,
-            'simpanan_pokok' => Helper::stringToRupiah($saldo_pokok),
-            'simpanan_wajib' => Helper::stringToRupiah($saldo_wajib),
-            'simpanan_sukarela' => Helper::stringToRupiah($saldo_sukarela),
-        ]);
+        return redirect()
+            ->route('admin.detail-simpanan', ['id_anggota' => $simpanan->id_anggota])
+            ->with('msg_success', 'Berhasil menghapus data');
     }
 
     public function HalamanPinjaman()
@@ -351,20 +368,7 @@ class AdminController extends Controller
             'jumlah_pinjaman' => 'required|numeric|min:1',
         ]);
 
-        $pinjaman = Pinjaman::firstOrCreate(
-            ['id_anggota' => $validated['id_anggota']], // cek berdasarkan id_anggota
-            [ // default kalau belum ada
-                'tgl_pinjaman' => $validated['tgl_pinjaman'],
-                'jaminan' => $validated['jaminan'],
-                'jumlah_pinjaman' => 0, // mulai dari 0 supaya bisa ditambah
-            ]
-        );
-
-        // tambahkan jumlah pinjaman baru
-        $pinjaman->jumlah_pinjaman += $validated['jumlah_pinjaman'];
-        $pinjaman->tgl_pinjaman = $validated['tgl_pinjaman'];
-        $pinjaman->jaminan = $validated['jaminan'];
-        $pinjaman->save();
+        Pinjaman::create($validated);
 
         return redirect()
             ->route('admin.pinjaman')
@@ -373,8 +377,8 @@ class AdminController extends Controller
 
     public function HapusPinjaman(string $id_pinjaman)
     {
-        $pinjaman = Pinjaman::where("id", "=", $id_pinjaman)->delete();
-        if (!$pinjaman) {
+        $pinjaman = Pinjaman::where("id", "=", $id_pinjaman)->first();
+        if (!$pinjaman || $pinjaman->delete()) {
             return redirect()
                 ->route('admin.detail-pinjaman', ['id_pinjaman' => $id_pinjaman])
                 ->with('msg_error', 'Gagal menghapus pinjaman');
@@ -430,15 +434,15 @@ class AdminController extends Controller
 
     public function HapusAngsuran(string $id_angsuran)
     {
-        $angsuran = Angsuran::where("id", '=', $id_angsuran)->delete();
-        if (!$angsuran) {
+        $angsuran = Angsuran::where("id", '=', $id_angsuran)->first();
+        if (!$angsuran || !$angsuran->delete()) {
             return redirect()
-                ->route('admin.detail-pinjaman', $id_angsuran)
+                ->route('admin.detail-pinjaman', ['id_anggota' => $angsuran->id_anggota])
                 ->with('msg_error', "Gagal menghapus angsuran");
         }
 
         return redirect()
-            ->route('admin.detail-pinjaman', $id_angsuran)
+            ->route('admin.detail-pinjaman', ['id_anggota' => $angsuran->id_anggota])
             ->with('msg_success', "Berhasil menghapus angsuran");
     }
 
@@ -460,6 +464,30 @@ class AdminController extends Controller
 
         return view('pages.penarikan', [
             'anggota' => $anggota
+        ]);
+    }
+
+    public function HalamanDetailPenarikan(string $id_anggota)
+    {
+        $anggota = Anggota::where('id', '=', $id_anggota)->first();
+
+        // total per jenis
+        $penarikan_pokok = $anggota->penarikan->where('jenis_simpanan', 'pokok')->sum('jumlah_penarikan');
+
+        $penarikan_wajib = $anggota->penarikan->where('jenis_simpanan', 'wajib')->sum('jumlah_penarikan');
+
+        $penarikan_sukarela = $anggota->penarikan->where('jenis_simpanan', 'sukarela')->sum('jumlah_penarikan');
+
+        foreach ($anggota->penarikan as $s) {
+            $s->tgl_penarikan = Helper::getTanggalAttribute($s->tgl_penarikan);
+            $s->jumlah_penarikan = Helper::stringToRupiah($s->jumlah_penarikan);
+        }
+
+        return view("pages.detail-penarikan", [
+            "anggota" => $anggota,
+            'penarikan_pokok' => Helper::stringToRupiah($penarikan_pokok),
+            'penarikan_wajib' => Helper::stringToRupiah($penarikan_wajib),
+            'penarikan_sukarela' => Helper::stringToRupiah($penarikan_sukarela),
         ]);
     }
 
@@ -496,9 +524,17 @@ class AdminController extends Controller
             'jumlah_penarikan' => 'required|numeric|min:1000',
         ]);
 
-        $simpanan = Simpanan::where('id', '=', $validated['id_anggota'])
+        // dd($validated);
+
+        $simpanan = Simpanan::where('id_anggota', '=', $validated['id_anggota'])
             ->where('jenis_simpanan', '=', $validated['jenis_simpanan'])
             ->first();
+
+        if (!$simpanan) {
+            return redirect()
+                ->route('admin.tambah-penarikan')
+                ->with('msg_error', 'Simpanan Tidak Ada');
+        }
 
         if ($simpanan->jumlah_simpanan < $validated['jumlah_penarikan']) {
             return redirect()
@@ -513,28 +549,18 @@ class AdminController extends Controller
             ->with('msg_success', 'Berhasil Menarik Simpanan');
     }
 
-    public function HalamanDetailPenarikan(string $id_anggota)
+    public function HapusPenarikan(string $id_penarikan)
     {
-        $anggota = Anggota::where('id', '=', $id_anggota)->first();
-
-        // total per jenis
-        $penarikan_pokok = $anggota->penarikan->where('jenis_simpanan', 'pokok')->sum('jumlah_penarikan');
-
-        $penarikan_wajib = $anggota->penarikan->where('jenis_simpanan', 'wajib')->sum('jumlah_penarikan');
-
-        $penarikan_sukarela = $anggota->penarikan->where('jenis_simpanan', 'sukarela')->sum('jumlah_penarikan');
-
-        foreach ($anggota->penarikan as $s) {
-            $s->tgl_penarikan = Helper::getTanggalAttribute($s->tgl_penarikan);
-            $s->jumlah_penarikan = Helper::stringToRupiah($s->jumlah_penarikan);
+        $penarikan = Penarikan::where("id", '=', $id_penarikan)->first();
+        if (!$penarikan || !$penarikan->delete()) {
+            return redirect()
+                ->route('admin.detail-penarikan', ['id_anggota' => $penarikan->id_anggota])
+                ->with('msg_error', 'Gagal menghapus data');
         }
 
-        return view("pages.detail-penarikan", [
-            "anggota" => $anggota,
-            'penarikan_pokok' => Helper::stringToRupiah($penarikan_pokok),
-            'penarikan_wajib' => Helper::stringToRupiah($penarikan_wajib),
-            'penarikan_sukarela' => Helper::stringToRupiah($penarikan_sukarela),
-        ]);
+        return redirect()
+            ->route('admin.detail-penarikan', ['id_anggota' => $penarikan->id_anggota])
+            ->with('msg_success', 'Berhasil menghapus data');
     }
 
     public function HalamanLaporanSimpanan()

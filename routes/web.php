@@ -70,6 +70,7 @@ Route::prefix("admin")
 
             Route::get("/tambah", [AdminController::class, "HalamanTambahSimpanan"])->name("admin.tambah-simpanan");
             Route::post('/tambah', [AdminController::class, 'TambahSimpanan'])->name('post.tambah-simpanan');
+            Route::delete("/hapus/{id_simpanan}", [AdminController::class, "HapusSimpanan"])->name('delete.hapus-simpanan');
         })->middleware(AdminMiddleware::class);
 
         /**
@@ -100,6 +101,7 @@ Route::prefix("admin")
 
             Route::get("/tambah", [AdminController::class, "HalamanTambahPenarikan"])->name("admin.tambah-penarikan");
             Route::post("/tambah", [AdminController::class, "TambahPenarikan"])->name("post.tambah-penarikan");
+            Route::delete("/hapus/{id_penarikan}", [AdminController::class, "HapusPenarikan"])->name('delete.hapus-penarikan');
         })->middleware(AdminMiddleware::class);
 
         /**

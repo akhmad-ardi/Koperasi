@@ -79,7 +79,27 @@
                                     <td>{{ $p->tgl_penarikan }}</td>
                                     <td>{{ $p->jenis_simpanan }}</td>
                                     <td>{{ $p->jumlah_penarikan }}</td>
-                                    <td></td>
+                                    <td>
+                                        <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
+                                            data-toggle="modal" data-target="#modalHapus{{ $p->id }}" />
+
+                                        <x-adminlte-modal id="modalHapus{{ $p->id }}" title="Hapus Data"
+                                            theme="danger" icon="fas fa-fw fa-trash" size='md'>
+                                            <p>Apakah anda ingin menghapus data ini ?</p>
+                                            <x-slot name="footerSlot">
+                                                <form
+                                                    action="{{ route('delete.hapus-penarikan', ['id_penarikan' => $p->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-adminlte-button type="button" theme="outline-danger"
+                                                        label="Batal Hapus" data-dismiss="modal" />
+                                                    <x-adminlte-button type="submit" theme="danger"
+                                                        icon="fas fa-fw fa-trash" label="Hapus" />
+                                                </form>
+                                            </x-slot>
+                                        </x-adminlte-modal>
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>

@@ -29,7 +29,7 @@ class AnggotaFactory extends Factory
             'no_telepon' => $this->faker->numerify('08###########'),
             'nik' => $this->faker->numerify('################'),
             'nip' => $this->faker->numerify('##################'),
-            'foto_diri' => 'default.jpg',
+            'foto_diri' => 'foto/default.jpg',
             'status' => $this->faker->randomElement(['aktif', 'nonaktif']),
             'tgl_gabung' => $this->faker->date(),
         ];

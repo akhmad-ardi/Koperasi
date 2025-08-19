@@ -5,21 +5,26 @@
     <meta charset="utf-8">
     <title>Laporan Pinjaman</title>
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
+        body {
+            font-family: sans-serif;
             font-size: 12px;
         }
 
-        table,
-        th,
-        td {
-            border: 1px solid black;
-            padding: 6px;
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
         }
 
-        h2 {
-            text-align: center;
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background: #f2f2f2;
         }
     </style>
 </head>
