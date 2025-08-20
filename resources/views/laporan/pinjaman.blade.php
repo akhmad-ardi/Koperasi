@@ -38,6 +38,8 @@
                 <th>Nomor Anggota</th>
                 <th>Nama Anggota</th>
                 <th>Total Pinjaman</th>
+                <th>Total Angsuran Pokok</th>
+                <th>Total Jasa</th>
                 <th>Total Angsuran</th>
                 <th>Sisa Pinjaman</th>
             </tr>
@@ -49,11 +51,13 @@
                     <td>{{ $a->no_anggota }}</td>
                     <td>{{ $a->nama }}</td>
                     <td>Rp {{ number_format($a->total_pinjaman, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->total_angsuran, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->sisa_pinjaman, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($a->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($a->angsuran->sum('jasa'), 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($a->total_angsuran, 0, ',', '.') }}</td>                        <td>Rp {{ number_format($a->sisa_pinjaman, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>
+
     </table>
 
 </body>

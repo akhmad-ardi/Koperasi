@@ -166,7 +166,6 @@
                                 <th class="text-center">Jumlah Angsuran</th>
                                 <th class="text-center">Jasa</th>
                                 <th class="text-center">Total Angsuran</th>
-                                <th class="text-center">Status</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -179,7 +178,6 @@
                                     <td>{{ $a->jumlah_angsuran_rupiah }}</td>
                                     <td>{{ $a->jasa_rupiah }}</td>
                                     <td>{{ $a->total_angsuran_rupiah }}</td>
-                                    <td>{{ $a->status }}</td>
                                     <td class="text-center">
                                         {{-- Edit --}}
                                         <x-adminlte-button label="Edit" theme="primary" icon="fas fa-fw fa-pen"
@@ -226,21 +224,6 @@
                                                         label="Total Angsuran" type="text"
                                                         placeholder="Total Angsuran"
                                                         value="{{ $a->total_angsuran_rupiah }}" disabled />
-                                                </div>
-
-                                                <div class="mb-3">
-                                                    <x-adminlte-select name="status" label="Status"
-                                                        placeholder="Status">
-                                                        <option value="" disabled selected>Pilih Status</option>
-                                                        <option value="lunas"
-                                                            {{ old('status', $a->status) == 'lunas' ? 'selected' : '' }}>
-                                                            Lunas
-                                                        </option>
-                                                        <option value="belum lunas"
-                                                            {{ old('status', $a->status) == 'belum lunas' ? 'selected' : '' }}>
-                                                            Belum Lunas
-                                                        </option>
-                                                    </x-adminlte-select>
                                                 </div>
 
                                                 <div class="text-right">

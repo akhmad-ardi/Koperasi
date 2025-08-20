@@ -456,11 +456,9 @@ class AdminController extends Controller
 
         foreach ($anggota as $a) {
             $total_pinjaman = $a->pinjaman->sum('jumlah_pinjaman');
-            $total_angsuran = $a->angsuran->
-                where('status', '=', 'lunas')
-                ->sum('total_angsuran');
+            $jumlah_angsuran = $a->angsuran->sum('jumlah_angsuran');
 
-            $a->total_pinjaman = Helper::stringToRupiah($total_pinjaman - $total_angsuran);
+            $a->total_pinjaman = Helper::stringToRupiah($total_pinjaman - $jumlah_angsuran);
         }
 
         return view("pages.pinjaman", [
@@ -572,7 +570,6 @@ class AdminController extends Controller
         $validated = $request->validate([
             'tgl_angsuran' => ['required', 'date'],
             'jumlah_angsuran' => ['required', 'numeric', 'min:1'],
-            'status' => ['required', 'in:lunas,belum lunas']
         ]);
 
         $anggota = Anggota::where("id", '=', $id_anggota)->first();
@@ -614,7 +611,9 @@ class AdminController extends Controller
         $anggota = Anggota::where("id", '=', $angsuran->id_anggota)->first();
 
         $jumlah_pinjaman = $anggota->pinjaman->sum('jumlah_pinjaman');
-        $jumlah_angsuran = $anggota->angsuran->sum('jumlah_angsuran');
+        $jumlah_angsuran = $anggota->angsuran
+            ->where('id', '!=', $id_angsuran)
+            ->sum('jumlah_angsuran');
 
         $sisa_pinjaman = $jumlah_pinjaman - $jumlah_angsuran;
 
@@ -625,7 +624,7 @@ class AdminController extends Controller
             'tgl_angsuran' => $validated['tgl_angsuran'],
             'jumlah_angsuran' => $validated['jumlah_angsuran'],
             'jasa' => $jasa,
-            'total_angsuran' => $total_angsuran
+            'total_angsuran' => $total_angsuran,
         ]);
 
         return redirect()
@@ -867,39 +866,44 @@ class AdminController extends Controller
     {
         $anggota = Anggota::with(['pinjaman', 'angsuran'])->get()->map(function ($a) {
             $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
-            $jumlahAngsuran = $a->angsuran->sum('jumlah_angsuran');
-            $totalAngsuran = $a->angsuran->sum('total_angsuran');
+            $pokokAngsuran = $a->angsuran->sum('jumlah_angsuran');
+            $jasaAngsuran = $a->angsuran->sum('jasa'); // AMBIL DARI DATABASE LANGSUNG
+            $totalAngsuran = $pokokAngsuran + $jasaAngsuran;
 
             $a->total_pinjaman = (float) $totalPinjaman;
             $a->total_angsuran = (float) $totalAngsuran;
-            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $jumlahAngsuran;
+            $a->total_pokok = (float) $pokokAngsuran;
+            $a->total_jasa = (float) $jasaAngsuran;
+            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $pokokAngsuran;
 
             return $a;
         });
 
-        return view('pages.laporan-pinjaman', [
-            'anggota' => $anggota
-        ]);
+        return view('pages.laporan-pinjaman', compact('anggota'));
     }
 
     public function LaporanPinjaman()
     {
         $anggota = Anggota::with(['pinjaman', 'angsuran'])->get()->map(function ($a) {
             $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
-            $jumlahAngsuran = $a->angsuran->sum('jumlah_angsuran');
-            $totalAngsuran = $a->angsuran->sum('total_angsuran');
+            $pokokAngsuran = $a->angsuran->sum('jumlah_angsuran');
+            $jasaAngsuran = $a->angsuran->sum('jasa');
+            $totalAngsuran = $pokokAngsuran + $jasaAngsuran;
 
             $a->total_pinjaman = (float) $totalPinjaman;
             $a->total_angsuran = (float) $totalAngsuran;
-            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $jumlahAngsuran;
+            $a->total_pokok = (float) $pokokAngsuran;
+            $a->total_jasa = (float) $jasaAngsuran;
+            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $pokokAngsuran;
 
             return $a;
         });
 
-
         $pdf = Pdf::loadView('laporan.pinjaman', compact('anggota'));
         return $pdf->download('laporan-pinjaman.pdf');
     }
+
+
 
     public function HalamanLaporanPenarikan()
     {

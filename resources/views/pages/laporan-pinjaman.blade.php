@@ -25,12 +25,14 @@
             <div class="card">
                 <div class="card-body">
                     <table id="anggotaTable" class="table table-bordered table-striped">
-                        <thead>
+                       <thead>
                             <tr>
-                                <th>No</th>
-                                <th>No. Anggota</th>
+                                <th>No.</th>
+                                <th>Nomor Anggota</th>
                                 <th>Nama Anggota</th>
                                 <th>Total Pinjaman</th>
+                                <th>Total Angsuran Pokok</th>
+                                <th>Total Jasa</th>
                                 <th>Total Angsuran</th>
                                 <th>Sisa Pinjaman</th>
                             </tr>
@@ -39,14 +41,17 @@
                             @foreach ($anggota as $a)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $a->no_anggota }} </td>
+                                    <td>{{ $a->no_anggota }}</td>
                                     <td>{{ $a->nama }}</td>
                                     <td>Rp {{ number_format($a->total_pinjaman, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($a->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($a->angsuran->sum('jasa'), 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($a->total_angsuran, 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($a->sisa_pinjaman, 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
                         </tbody>
+
                     </table>
                 </div>
             </div>
