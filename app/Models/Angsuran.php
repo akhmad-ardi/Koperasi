@@ -18,6 +18,7 @@ class Angsuran extends Model
         'jumlah_angsuran',
         'jasa',
         'total_angsuran',
+        'status'
     ];
 
     protected static function booted()

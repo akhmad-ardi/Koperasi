@@ -24,6 +24,7 @@ class AngsuranFactory extends Factory
             'jumlah_angsuran' => $this->faker->numberBetween(500000, 2000000),
             'jasa' => $this->faker->numberBetween(50000, 200000),
             'total_angsuran' => $this->faker->numberBetween(550000, 2200000),
+            'status' => $this->faker->randomElement(['lunas', 'belum lunas']),
         ];
     }
 }

@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->integer('jumlah_angsuran');
             $table->integer('jasa');
             $table->integer('total_angsuran');
+            $table->enum('status', ['lunas', 'belum lunas']);
 
             $table->foreign('id_anggota')->references('id')->on('anggota')->onDelete('cascade');
         });

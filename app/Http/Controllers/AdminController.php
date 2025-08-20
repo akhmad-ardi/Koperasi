@@ -572,6 +572,7 @@ class AdminController extends Controller
         $validated = $request->validate([
             'tgl_angsuran' => ['required', 'date'],
             'jumlah_angsuran' => ['required', 'numeric', 'min:1'],
+            'status' => ['required', 'in:lunas,belum lunas']
         ]);
 
         $anggota = Anggota::where("id", '=', $id_anggota)->first();
