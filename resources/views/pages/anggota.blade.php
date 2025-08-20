@@ -42,7 +42,7 @@
                                 <th class="text-center">Nama</th>
                                 <th class="text-center">Nama Sekolah</th>
                                 <th class="text-center">Jenis Kelamin</th>
-                                <th class="text-center">Tanggal Gabung</th>
+                                <th class="text-center">Tanggal Lahir</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>

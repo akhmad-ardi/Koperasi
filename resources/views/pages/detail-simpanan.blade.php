@@ -80,14 +80,67 @@
                             @foreach ($anggota->simpanan as $s)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $s->tgl_simpanan }}</td>
+                                    <td>{{ $s->tgl_simpanan_dmy }}</td>
                                     <td>{{ $s->jenis_simpanan }}</td>
                                     <td>{{ $s->jumlah_simpanan }}</td>
                                     <td class="text-center">
-                                        <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
-                                            data-toggle="modal" data-target="#modalHapus{{ $s->id }}" />
+                                        {{-- Edit --}}
+                                        <x-adminlte-button label="Edit" theme="primary" icon="fas fa-fw fa-pen"
+                                            data-toggle="modal" data-target="#modalEditSimpanan{{ $s->id }}" />
 
-                                        <x-adminlte-modal id="modalHapus{{ $s->id }}" title="Hapus Data"
+                                        <x-adminlte-modal id="modalEditSimpanan{{ $s->id }}" title="Edit Data"
+                                            theme="primary" icon="fas fa-fw fa-pen" size="md" class="text-left">
+                                            <form action="{{ route('put.edit-simpanan', ['id_simpanan' => $s->id]) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PUT')
+
+                                                <div class="mb-3">
+                                                    <x-adminlte-input name="tgl_simpanan" label="Tanggal Simpanan"
+                                                        type="date" placeholder="Tanggal Simmpanan"
+                                                        value="{{ $s->tgl_simpanan }}" />
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <x-adminlte-select name="jenis_simpanan" label="Jenis Simpanan">
+                                                        <option value="" selected disabled>Jenis Simpanan</option>
+                                                        <option value="pokok"
+                                                            {{ $s->jenis_simpanan == 'pokok' ? 'selected' : '' }}>
+                                                            Pokok
+                                                        </option>
+                                                        <option value="wajib"
+                                                            {{ $s->jenis_simpanan == 'wajib' ? 'selected' : '' }}>
+                                                            Wajib
+                                                        </option>
+                                                        <option value="sukarela"
+                                                            {{ $s->jenis_simpanan == 'sukarela' ? 'selected' : '' }}>
+                                                            Sukarela
+                                                        </option>
+                                                    </x-adminlte-select>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <x-adminlte-input name="jumlah_simpanan" label="Jumlah Simpanan"
+                                                        type="number" placeholder="Jumlah Simpanan"
+                                                        value="{{ old('jumlah_simpanan') }}" />
+                                                </div>
+
+                                                <div class="text-right">
+                                                    <x-adminlte-button type="button" theme="outline-primary"
+                                                        label="Batal Edit" data-dismiss="modal" />
+                                                    <x-adminlte-button type="submit" theme="primary"
+                                                        icon="fas fa-fw fa-pen" label="Edit" />
+                                                </div>
+                                            </form>
+
+                                            <x-slot name="footerSlot"></x-slot>
+                                        </x-adminlte-modal>
+
+                                        {{-- Hapus --}}
+                                        <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
+                                            data-toggle="modal" data-target="#modalHapusSimpanan{{ $s->id }}" />
+
+                                        <x-adminlte-modal id="modalHapusSimpanan{{ $s->id }}" title="Hapus Data"
                                             theme="danger" icon="fas fa-fw fa-trash" size='md'>
                                             <p>Apakah anda ingin menghapus data ini ?</p>
                                             <x-slot name="footerSlot">

@@ -24,7 +24,6 @@ class PinjamanFactory extends Factory
             'tgl_pinjaman' => $this->faker->date(),
             'jumlah_pinjaman' => $jumlah,
             'jaminan' => $this->faker->word(),
-            'status' => $this->faker->randomElement(['lunas', 'belum lunas']),
         ];
     }
 }

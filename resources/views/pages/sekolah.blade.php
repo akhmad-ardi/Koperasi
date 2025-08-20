@@ -20,10 +20,10 @@
         </div>
         <div class="col-md-5">
             <form method="GET" action="{{ route('admin.sekolah') }}">
-                <x-adminlte-input name="nama" placeholder="Cari nama angggota..." igroup-size="md"
+                <x-adminlte-input name="nama" placeholder="Cari nama sekolah..." igroup-size="md"
                     value="{{ request('nama') }}">
                     <x-slot name="appendSlot">
-                        <x-adminlte-button type="submit" theme="outline-primary" label="Search" />
+                        <x-adminlte-button type="submit" theme="outline-primary" icon="fa fa-fw fa-search" />
                     </x-slot>
                 </x-adminlte-input>
             </form>

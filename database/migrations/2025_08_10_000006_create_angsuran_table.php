@@ -18,7 +18,6 @@ return new class extends Migration {
             $table->integer('jumlah_angsuran');
             $table->integer('jasa');
             $table->integer('total_angsuran');
-            $table->string('status', 20);
 
             $table->foreign('id_anggota')->references('id')->on('anggota')->onDelete('cascade');
         });

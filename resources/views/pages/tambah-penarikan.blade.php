@@ -44,9 +44,12 @@
                         <div class="mb-3">
                             <x-adminlte-select id="jenis_simpanan" name="jenis_simpanan" label="Jenis Simpanan">
                                 <option value="" selected disabled>Jenis Simpanan</option>
-                                <option value="pokok">Pokok</option>
-                                <option value="wajib">Wajib</option>
-                                <option value="sukarela">Sukarela</option>
+                                <option value="pokok" {{ old('jenis_simpanan') == 'pokok' ? 'selected' : '' }}>Pokok
+                                </option>
+                                <option value="wajib" {{ old('jenis_simpanan') == 'wajib' ? 'selected' : '' }}>Wajib
+                                </option>
+                                <option value="sukarela" {{ old('jenis_simpanan') == 'sukarela' ? 'selected' : '' }}>
+                                    Sukarela</option>
                             </x-adminlte-select>
                         </div>
 
@@ -57,7 +60,7 @@
 
                         <div class="mb-3">
                             <x-adminlte-input name="jumlah_penarikan" label="Jumlah Penarikan" type="number"
-                                placeholder="Jumlah Penarikan" />
+                                placeholder="Jumlah Penarikan" value="{{ old('jumlah_penarikan') }}" />
                         </div>
 
                         <div class="mb-3 text-right">

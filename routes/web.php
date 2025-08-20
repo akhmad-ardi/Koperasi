@@ -73,6 +73,7 @@ Route::prefix("admin")
 
             Route::get("/tambah", [AdminController::class, "HalamanTambahSimpanan"])->name("admin.tambah-simpanan");
             Route::post('/tambah', [AdminController::class, 'TambahSimpanan'])->name('post.tambah-simpanan');
+            Route::put("/edit/{id_simpanan}", [AdminController::class, "EditSimpanan"])->name("put.edit-simpanan");
             Route::delete("/hapus/{id_simpanan}", [AdminController::class, "HapusSimpanan"])->name('delete.hapus-simpanan');
         })->middleware(AdminMiddleware::class);
 
@@ -86,11 +87,12 @@ Route::prefix("admin")
 
             Route::get("/tambah", [AdminController::class, "HalamanTambahPinjaman"])->name("admin.tambah-pinjaman");
             Route::post('/tambah', [AdminController::class, 'TambahPinjaman'])->name('post.tambah-pinjaman');
-
+            Route::put("/edit/{id_pinjaman}", [AdminController::class, "EditPinjaman"])->name("put.edit-pinjaman");
             Route::delete("/hapus/{id_pinjaman}", [AdminController::class, "HapusPinjaman"])->name("delete.hapus-pinjaman");
 
             Route::get('/bayar-angsuran/{id_anggota}', [AdminController::class, "HalamanBayarAngsuran"])->name('admin.bayar-angsuran');
             Route::post('/bayar-angsuran/{id_anggota}', [AdminController::class, "BayarAngsuran"])->name('post.bayar-angsuran');
+            Route::put("/edit-angsuran/{id_angsuran}", [AdminController::class, "EditAngsuran"])->name("put.edit-angsuran");
             Route::delete("/hapus-angsuran/{id_angsuran}", [AdminController::class, "HapusAngsuran"])->name('delete.hapus-angsuran');
         })->middleware(AdminMiddleware::class);
 
@@ -104,6 +106,7 @@ Route::prefix("admin")
 
             Route::get("/tambah", [AdminController::class, "HalamanTambahPenarikan"])->name("admin.tambah-penarikan");
             Route::post("/tambah", [AdminController::class, "TambahPenarikan"])->name("post.tambah-penarikan");
+            Route::put("/edit/{id_penarikan}", [AdminController::class, "EditPenarikan"])->name("put.edit-penarikan");
             Route::delete("/hapus/{id_penarikan}", [AdminController::class, "HapusPenarikan"])->name('delete.hapus-penarikan');
         })->middleware(AdminMiddleware::class);
 

@@ -23,7 +23,7 @@
                 <x-adminlte-input name="nama" placeholder="Cari nama angggota..." igroup-size="md"
                     value="{{ request('nama') }}">
                     <x-slot name="appendSlot">
-                        <x-adminlte-button type="submit" theme="outline-primary" label="Search" />
+                        <x-adminlte-button type="submit" theme="outline-primary" icon="fa fa-fw fa-search" />
                     </x-slot>
                 </x-adminlte-input>
             </form>

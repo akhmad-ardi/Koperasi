@@ -24,7 +24,6 @@ class Pinjaman extends Model
         'tgl_pinjaman',
         'jumlah_pinjaman',
         'jaminan',
-        'status',
     ];
 
     // Relasi ke anggota

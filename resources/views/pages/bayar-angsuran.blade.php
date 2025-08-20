@@ -43,18 +43,6 @@
                                 type="text" placeholder="Total Angsuran" value="{{ old('total_angsuran') }}" disabled />
                         </div>
 
-                        <div class="mb-3">
-                            <x-adminlte-select name="status" label="Status">
-                                <option value="" selected disabled>Pilih Status</option>
-                                <option value="lunas" {{ old('status') == 'lunas' ? 'selected' : '' }}>
-                                    Lunas
-                                </option>
-                                <option value="belum lunas" {{ old('status') == 'belum lunas' ? 'selected' : '' }}>
-                                    Belum Lunas
-                                </option>
-                            </x-adminlte-select>
-                        </div>
-
                         <div class="mb-3 text-right">
                             <a href="{{ route('admin.detail-pinjaman', ['id_anggota' => $anggota->id]) }}"
                                 class="btn btn-outline-primary">Kembali</a>

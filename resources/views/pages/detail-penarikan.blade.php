@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Simpanan')
+@section('title', 'Detail Penarikan')
 
 @section('content_header')
-    <h1>Data Simpanan</h1>
+    <h1>Data Penarikan</h1>
 @stop
 
 @section('content')
@@ -76,10 +76,68 @@
                             @foreach ($anggota->penarikan as $p)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $p->tgl_penarikan }}</td>
+                                    <td>{{ $p->tgl_penarikan_dmy }}</td>
                                     <td>{{ $p->jenis_simpanan }}</td>
-                                    <td>{{ $p->jumlah_penarikan }}</td>
-                                    <td>
+                                    <td>{{ $p->jumlah_penarikan_rupiah }}</td>
+                                    <td class="text-center">
+                                        {{-- Edit --}}
+                                        <x-adminlte-button label="Edit" theme="primary" icon="fas fa-fw fa-pen"
+                                            data-toggle="modal" data-target="#modalEditPenarikan{{ $p->id }}" />
+
+                                        <x-adminlte-modal id="modalEditPenarikan{{ $p->id }}" title="Edit Data"
+                                            theme="primary" icon="fas fa-fw fa-pen" size="md" class="text-left">
+                                            <form action="{{ route('put.edit-penarikan', ['id_penarikan' => $p->id]) }}"
+                                                method="POST">
+                                                @csrf
+                                                @method('PUT')
+
+                                                <div class="mb-3">
+                                                    <x-adminlte-input name="tgl_penarikan" label="Tanggal Penarikan"
+                                                        type="date" value="{{ $p->tgl_penarikan }}" />
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <x-adminlte-select
+                                                        id="jenis_simpanan_{{ $p->id }}_{{ $loop->index }}"
+                                                        name="jenis_simpanan" label="Jenis Simpanan">
+                                                        <option value="" selected disabled>Jenis Simpanan</option>
+                                                        <option value="pokok"
+                                                            {{ $p->jenis_simpanan == 'pokok' ? 'selected' : '' }}>Pokok
+                                                        </option>
+                                                        <option value="wajib"
+                                                            {{ $p->jenis_simpanan == 'wajib' ? 'selected' : '' }}>Wajib
+                                                        </option>
+                                                        <option value="sukarela"
+                                                            {{ $p->jenis_simpanan == 'sukarela' ? 'selected' : '' }}>
+                                                            Sukarela</option>
+                                                    </x-adminlte-select>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <x-adminlte-input
+                                                        id="jumlah_simpanan_{{ $p->id }}_{{ $loop->index }}"
+                                                        name="jumlah_simpanan" label="Jumlah Simpanan" type="text"
+                                                        disabled />
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <x-adminlte-input name="jumlah_penarikan" label="Jumlah Penarikan"
+                                                        type="number" placeholder="Jumlah Penarikan"
+                                                        value="{{ $p->jumlah_penarikan }}" />
+                                                </div>
+
+                                                <div class="text-right">
+                                                    <x-adminlte-button type="button" theme="outline-primary"
+                                                        label="Batal Edit" data-dismiss="modal" />
+                                                    <x-adminlte-button type="submit" theme="primary"
+                                                        icon="fas fa-fw fa-pen" label="Edit" />
+                                                </div>
+                                            </form>
+
+                                            <x-slot name="footerSlot"></x-slot>
+                                        </x-adminlte-modal>
+
+                                        {{-- Hapus --}}
                                         <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
                                             data-toggle="modal" data-target="#modalHapus{{ $p->id }}" />
 
@@ -115,9 +173,55 @@
 @stop
 
 @section('js')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const totalSimpanan = {
+                pokok: {{ $total_simpanan_pokok }},
+                wajib: {{ $total_simpanan_wajib }},
+                sukarela: {{ $total_simpanan_sukarela }},
+            };
+
+            function formatRupiah(angka) {
+                return "Rp " + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            // cari semua select dengan id mulai dari "jenis_simpanan_"
+            const allSelectJenis = document.querySelectorAll('[id^="jenis_simpanan_"]');
+
+            allSelectJenis.forEach(select => {
+                const uniqueId = select.id.replace("jenis_simpanan_", "");
+                const jumlahInput = document.getElementById("jumlah_simpanan_" + uniqueId);
+
+                function updateJumlah() {
+                    const jenis = select.value;
+                    const jumlah = totalSimpanan[jenis] || 0;
+                    jumlahInput.value = formatRupiah(jumlah);
+                }
+
+                // event pas ganti
+                select.addEventListener("change", updateJumlah);
+
+                // isi default saat halaman load (kalau ada value terpilih)
+                if (select.value) {
+                    updateJumlah();
+                }
+            });
+        });
+    </script>
+
     @if (session('msg_success'))
         <script>
             toastr.success("{{ session('msg_success') }}", {
+                timeOut: 3000,
+                closeButton: true,
+                progressBar: true
+            });
+        </script>
+    @endif
+
+    @if (session('msg_error'))
+        <script>
+            toastr.error("{{ session('msg_error') }}", {
                 timeOut: 3000,
                 closeButton: true,
                 progressBar: true

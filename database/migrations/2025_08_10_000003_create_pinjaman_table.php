@@ -16,7 +16,6 @@ return new class extends Migration {
             $table->date('tgl_pinjaman');
             $table->integer('jumlah_pinjaman');
             $table->string('jaminan', 50);
-            $table->enum('status', ['lunas', 'belum lunas'])->default('lunas');
 
             $table->foreign('id_anggota')->references('id')->on('anggota')->onDelete('cascade');
         });
