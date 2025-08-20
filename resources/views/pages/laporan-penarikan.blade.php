@@ -30,6 +30,7 @@
                                 <th>No</th>
                                 <th>No. Anggota</th>
                                 <th>Nama Anggota</th>
+                                <th>Sekolah</th>
                                 <th>Total Penarikan</th>
                             </tr>
                         </thead>
@@ -39,6 +40,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $a->no_anggota }}</td>
                                     <td>{{ $a->nama }}</td>
+                                    <td>{{ $a->sekolah->nama_sekolah ?? '-' }}</td>
                                     <td>Rp {{ number_format($a->total_penarikan, 0, ',', '.') }}</td>
                                 </tr>
                             @endforeach
@@ -51,11 +53,28 @@
 @stop
 
 @section('css')
-    {{-- Tambahkan CSS custom kalau perlu --}}
+@section('css')
+    <style>
+        /* Header tabel */
+        #anggotaTable th {
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        /* Isi tabel */
+        #anggotaTable td {
+            text-align: left;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+    </style>
+@stop
+
 @stop
 
 @section('js')
-    <script>
-        console.log('Dashboard Loaded');
-    </script>
+<script>
+    console.log('Dashboard Loaded');
+</script>
 @stop

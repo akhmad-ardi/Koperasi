@@ -18,7 +18,8 @@
                 <div class="icon">
                     <i class="fas fa-school"></i>
                 </div>
-                <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('admin.sekolah') }}" class="small-box-footer">Lihat <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -32,7 +33,8 @@
                 <div class="icon">
                     <i class="fas fa-users"></i>
                 </div>
-                <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('admin.anggota') }}" class="small-box-footer">Lihat <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -46,7 +48,8 @@
                 <div class="icon">
                     <i class="fas fa-wallet"></i>
                 </div>
-                <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('admin.simpanan') }}" class="small-box-footer">Lihat <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>
@@ -62,7 +65,8 @@
                 <div class="icon">
                     <i class="fas fa-hand-holding-usd"></i>
                 </div>
-                <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('admin.pinjaman') }}" class="small-box-footer">Lihat <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -76,7 +80,8 @@
                 <div class="icon">
                     <i class="fas fa-hand-holding-usd"></i>
                 </div>
-                <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('admin.pinjaman') }}" class="small-box-footer">Lihat <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -90,7 +95,8 @@
                 <div class="icon">
                     <i class="fas fa-hand-holding-usd"></i>
                 </div>
-                <a href="#" class="small-box-footer">Lihat <i class="fas fa-arrow-circle-right"></i></a>
+                <a href="{{ route('admin.penarikan') }}" class="small-box-footer">Lihat <i
+                        class="fas fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>

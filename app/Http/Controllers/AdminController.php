@@ -827,7 +827,7 @@ class AdminController extends Controller
 
     public function HalamanLaporanSimpanan()
     {
-        $anggota = Anggota::with(['simpanan', 'penarikan'])->get();
+        $anggota = Anggota::with(['simpanan', 'penarikan', 'sekolah'])->get();
 
         // hitung saldo akhir per anggota
         $anggota->map(function ($a) {
@@ -846,7 +846,7 @@ class AdminController extends Controller
 
     public function LaporanSimpananPDF()
     {
-        $anggota = Anggota::with(['simpanan', 'penarikan'])->get();
+        $anggota = Anggota::with(['simpanan', 'penarikan', 'sekolah'])->get();
 
         // hitung saldo akhir per anggota
         $anggota->map(function ($a) {
@@ -864,7 +864,7 @@ class AdminController extends Controller
 
     public function HalamanLaporanPinjaman()
     {
-        $anggota = Anggota::with(['pinjaman', 'angsuran'])->get()->map(function ($a) {
+        $anggota = Anggota::with(['pinjaman', 'angsuran', 'sekolah'])->get()->map(function ($a) {
             $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
             $pokokAngsuran = $a->angsuran->sum('jumlah_angsuran');
             $jasaAngsuran = $a->angsuran->sum('jasa'); // AMBIL DARI DATABASE LANGSUNG
@@ -884,7 +884,7 @@ class AdminController extends Controller
 
     public function LaporanPinjaman()
     {
-        $anggota = Anggota::with(['pinjaman', 'angsuran'])->get()->map(function ($a) {
+        $anggota = Anggota::with(['pinjaman', 'angsuran', 'sekolah'])->get()->map(function ($a) {
             $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
             $pokokAngsuran = $a->angsuran->sum('jumlah_angsuran');
             $jasaAngsuran = $a->angsuran->sum('jasa');
@@ -899,7 +899,9 @@ class AdminController extends Controller
             return $a;
         });
 
-        $pdf = Pdf::loadView('laporan.pinjaman', compact('anggota'));
+        $pdf = Pdf::loadView('laporan.pinjaman', compact('anggota'))
+            ->setPaper('a4', 'landscape');
+
         return $pdf->download('laporan-pinjaman.pdf');
     }
 
@@ -907,7 +909,7 @@ class AdminController extends Controller
 
     public function HalamanLaporanPenarikan()
     {
-        $anggota = Anggota::with('penarikan')->get()->map(function ($a) {
+        $anggota = Anggota::with('penarikan', 'sekolah')->get()->map(function ($a) {
             $totalPenarikan = (float) $a->penarikan->sum('jumlah_penarikan');
             $a->total_penarikan = $totalPenarikan;
             return $a;
@@ -920,13 +922,15 @@ class AdminController extends Controller
 
     public function LaporanPenarikan()
     {
-        $anggota = Anggota::with('penarikan')->get()->map(function ($a) {
+        $anggota = Anggota::with('penarikan', 'sekolah')->get()->map(function ($a) {
             $totalPenarikan = (float) $a->penarikan->sum('jumlah_penarikan');
             $a->total_penarikan = $totalPenarikan;
             return $a;
         });
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('laporan.penarikan', compact('anggota'));
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('laporan.penarikan', compact('anggota'))
+            ->setPaper('a4', 'landscape');
+
         return $pdf->download('laporan-penarikan.pdf');
     }
 }

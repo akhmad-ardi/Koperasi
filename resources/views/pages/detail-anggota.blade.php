@@ -89,7 +89,6 @@
                         <div class="mb-3 text-right">
                             <a href="{{ route('admin.anggota') }}" class="btn btn-outline-primary">Kembali</a>
 
-                            <x-adminlte-button type="submit" theme="primary" label="Simpan" />
                         </div>
                     </form>
                 </div>

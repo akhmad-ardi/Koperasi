@@ -30,9 +30,10 @@
                                 <th class="text-center">Nomor</th>
                                 <th class="text-center">No. Anggota</th>
                                 <th class="text-center">Nama</th>
-                                <th class="text-center">Jenis Simpanan</th>
-                                <th class="text-center">Jumlah Simpanan</th>
-                                <th class="text-center">Tanggal</th>
+                                <th class="text-center">Sekolah</th>
+                                <th class="text-center">Total Simpanan</th>
+                                <th class="text-center">Total Penarikan</th>
+                                <th class="text-center">Saldo Akhir</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,6 +42,7 @@
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $a->no_anggota }}</td>
                                     <td>{{ $a->nama }}</td>
+                                    <td>{{ $a->sekolah->nama_sekolah ?? '-' }}</td>
                                     <td>{{ $a->jumlah_simpanan }}</td>
                                     <td>{{ $a->jumlah_penarikan }}</td>
                                     <td>{{ $a->saldo }}</td>
@@ -55,11 +57,28 @@
 @stop
 
 @section('css')
-    {{-- Tambahkan CSS custom kalau perlu --}}
+@section('css')
+    <style>
+        /* Header tabel */
+        #anggotaTable th {
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        /* Isi tabel */
+        #anggotaTable td {
+            text-align: left;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+    </style>
+@stop
+
 @stop
 
 @section('js')
-    <script>
-        console.log('Dashboard Loaded');
-    </script>
+<script>
+    console.log('Dashboard Loaded');
+</script>
 @stop

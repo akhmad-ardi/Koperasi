@@ -20,11 +20,20 @@
         td {
             border: 1px solid #000;
             padding: 6px;
-            text-align: left;
+            vertical-align: middle;
+            white-space: nowrap;
+            /* biar tidak turun baris */
         }
 
         th {
             background: #f2f2f2;
+            text-align: center;
+            /* judul kolom rata tengah */
+        }
+
+        td {
+            text-align: left;
+            /* isi data rata kiri */
         }
     </style>
 </head>
@@ -35,8 +44,9 @@
         <thead>
             <tr>
                 <th>No.</th>
-                <th>Nomor Anggota</th>
+                <th>No. Anggota</th>
                 <th>Nama Anggota</th>
+                <th>Sekolah</th>
                 <th>Total Pinjaman</th>
                 <th>Total Angsuran Pokok</th>
                 <th>Total Jasa</th>
@@ -50,10 +60,12 @@
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $a->no_anggota }}</td>
                     <td>{{ $a->nama }}</td>
+                    <td>{{ $a->sekolah->nama_sekolah ?? '-' }}</td>
                     <td>Rp {{ number_format($a->total_pinjaman, 0, ',', '.') }}</td>
                     <td>Rp {{ number_format($a->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}</td>
                     <td>Rp {{ number_format($a->angsuran->sum('jasa'), 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->total_angsuran, 0, ',', '.') }}</td>                        <td>Rp {{ number_format($a->sisa_pinjaman, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($a->total_angsuran, 0, ',', '.') }}</td>
+                    <td>Rp {{ number_format($a->sisa_pinjaman, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
         </tbody>

@@ -25,11 +25,12 @@
             <div class="card">
                 <div class="card-body">
                     <table id="anggotaTable" class="table table-bordered table-striped">
-                       <thead>
+                        <thead>
                             <tr>
                                 <th>No.</th>
-                                <th>Nomor Anggota</th>
+                                <th>No. Anggota</th>
                                 <th>Nama Anggota</th>
+                                <th>Sekolah</th>
                                 <th>Total Pinjaman</th>
                                 <th>Total Angsuran Pokok</th>
                                 <th>Total Jasa</th>
@@ -43,6 +44,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $a->no_anggota }}</td>
                                     <td>{{ $a->nama }}</td>
+                                    <td>{{ $a->sekolah->nama_sekolah ?? '-' }}</td>
                                     <td>Rp {{ number_format($a->total_pinjaman, 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($a->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}</td>
                                     <td>Rp {{ number_format($a->angsuran->sum('jasa'), 0, ',', '.') }}</td>
@@ -60,7 +62,22 @@
 @stop
 
 @section('css')
-    {{-- Tambahkan CSS custom kalau perlu --}}
+@section('css')
+    <style>
+        /* Header tabel */
+        #anggotaTable th {
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        /* Isi tabel */
+        #anggotaTable td {
+            text-align: left;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+    </style>
 @stop
 
 @section('js')

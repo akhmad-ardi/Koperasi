@@ -13,10 +13,12 @@
 
     <div class="row mb-3">
         <div class="col-md-2">
-            <a href="{{ route('admin.tambah-anggota') }}" class="btn btn-primary">
-                <i class="fas fa-fw fa-plus"></i>
-                Tambah Anggota
-            </a>
+            @if (Auth::user()->role == 'admin')
+                <a href="{{ route('admin.tambah-anggota') }}" class="btn btn-primary">
+                    <i class="fas fa-fw fa-plus"></i>
+                    Tambah Anggota
+                </a>
+            @endif
         </div>
         <div class="col-md-5">
             <form method="GET" action="{{ route('admin.anggota') }}">
@@ -42,7 +44,7 @@
                                 <th class="text-center">Nama</th>
                                 <th class="text-center">Nama Sekolah</th>
                                 <th class="text-center">Jenis Kelamin</th>
-                                <th class="text-center">Tanggal Lahir</th>
+                                <th class="text-center">Tanggal Gabung</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
@@ -54,7 +56,7 @@
                                     <td>{{ $a->nama }}</td>
                                     <td>{{ $a->sekolah->nama_sekolah }}</td>
                                     <td>{{ $a->jenis_kelamin }}</td>
-                                    <td>{{ $a->tgl_lahir }}</td>
+                                    <td>{{ $a->tgl_gabung }}</td>
                                     <td class="text-center d-flex">
                                         {{-- Detail --}}
                                         <a href="{{ route('admin.detail-anggota', ['id_anggota' => $a->id]) }}"
@@ -62,32 +64,35 @@
                                             <i class="fa fa-fw fa-user"></i>
                                         </a>
 
-                                        {{-- Edit --}}
-                                        <a href="{{ route('admin.edit-anggota', ['id_anggota' => $a->id]) }}"
-                                            class="btn btn-primary mr-1">
-                                            <i class="fa fa-fw fa-pen"></i>
-                                        </a>
+                                        {{-- Tombol edit & hapus hanya muncul jika role = admin --}}
+                                        @if (Auth::user()->role == 'admin')
+                                            {{-- Edit --}}
+                                            <a href="{{ route('admin.edit-anggota', ['id_anggota' => $a->id]) }}"
+                                                class="btn btn-primary mr-1">
+                                                <i class="fa fa-fw fa-pen"></i>
+                                            </a>
 
-                                        {{-- Hapus --}}
-                                        <x-adminlte-button label="" theme="danger" icon="fas fa-fw fa-trash"
-                                            data-toggle="modal" data-target="#modalHapus" />
+                                            {{-- Hapus --}}
+                                            <x-adminlte-button label="" theme="danger" icon="fas fa-fw fa-trash"
+                                                data-toggle="modal" data-target="#modalHapus{{ $a->id }}" />
 
-                                        <x-adminlte-modal id="modalHapus" title="Hapus Data" theme="danger"
-                                            icon="fas fa-fw fa-trash" size='md'>
-                                            <p>Apakah anda ingin menghapus data ini ?</p>
-                                            <x-slot name="footerSlot">
-                                                <form
-                                                    action="{{ route('delete.hapus-anggota', ['id_anggota' => $a->id]) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <x-adminlte-button type="button" theme="outline-danger"
-                                                        label="Batal Hapus" data-dismiss="modal" />
-                                                    <x-adminlte-button type="submit" theme="danger"
-                                                        icon="fas fa-fw fa-trash" label="Hapus" />
-                                                </form>
-                                            </x-slot>
-                                        </x-adminlte-modal>
+                                            <x-adminlte-modal id="modalHapus{{ $a->id }}" title="Hapus Data"
+                                                theme="danger" icon="fas fa-fw fa-trash" size='md'>
+                                                <p>Apakah anda ingin menghapus data ini ?</p>
+                                                <x-slot name="footerSlot">
+                                                    <form
+                                                        action="{{ route('delete.hapus-anggota', ['id_anggota' => $a->id]) }}"
+                                                        method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <x-adminlte-button type="button" theme="outline-danger"
+                                                            label="Batal Hapus" data-dismiss="modal" />
+                                                        <x-adminlte-button type="submit" theme="danger"
+                                                            icon="fas fa-fw fa-trash" label="Hapus" />
+                                                    </form>
+                                                </x-slot>
+                                            </x-adminlte-modal>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach

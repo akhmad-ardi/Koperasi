@@ -13,14 +13,16 @@
 
     <div class="row mb-3">
         <div class="col-md-2">
-            <a href="{{ route('admin.tambah-penarikan') }}" class="btn btn-primary">
-                <i class="fas fa-fw fa-plus"></i>
-                Tambah Data
-            </a>
+            @if (Auth::user()->role == 'admin')
+                <a href="{{ route('admin.tambah-penarikan') }}" class="btn btn-primary">
+                    <i class="fas fa-fw fa-plus"></i>
+                    Tambah Data
+                </a>
+            @endif
         </div>
         <div class="col-md-5">
             <form method="GET" action="{{ route('admin.penarikan') }}">
-                <x-adminlte-input name="nama" placeholder="Cari nama angggota..." igroup-size="md"
+                <x-adminlte-input name="nama" placeholder="Cari nama anggota..." igroup-size="md"
                     value="{{ request('nama') }}">
                     <x-slot name="appendSlot">
                         <x-adminlte-button type="submit" theme="outline-primary" icon="fa fa-fw fa-search" />

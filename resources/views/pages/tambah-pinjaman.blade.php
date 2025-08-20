@@ -3,7 +3,7 @@
 @section('title', 'Tambah Pinajaman')
 
 @section('content_header')
-    <h1>Tambah Data Pinajaman</h1>
+    <h1>Tambah Data Pinjaman</h1>
 @stop
 
 @section('content')
