@@ -40,32 +40,49 @@
 
 <body>
     <h2 style="text-align:center;">Laporan Simpanan Anggota</h2>
-    <table>
-        <thead>
+    <table class="table table-bordered">
+        <thead class="text-center">
             <tr>
                 <th>No</th>
-                <th>No Anggota</th>
-                <th>Nama</th>
+                <th>No. Anggota</th>
+                <th>Nama Anggota</th>
                 <th>Sekolah</th>
-                <th>Total Simpanan</th>
-                <th>Total Penarikan</th>
-                <th>Saldo Akhir</th>
+                <th>Tanggal Simpanan</th>
+                <th>Jenis Simpanan</th>
+                <th>Jumlah Simpanan</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($anggota as $a)
+            @forelse ($simpanan as $s)
                 <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $a->no_anggota }}</td>
-                    <td>{{ $a->nama }}</td>
-                    <td>{{ $a->sekolah->nama_sekolah ?? '-' }}</td>
-                    <td>Rp {{ number_format($a->simpanan->sum('jumlah_simpanan'), 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->penarikan->sum('jumlah_penarikan'), 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->saldo, 0, ',', '.') }}</td>
+                    <td class="text-center">{{ $loop->iteration }}</td>
+                    <td>{{ $s->anggota->no_anggota ?? '-' }}</td>
+                    <td>{{ $s->anggota->nama ?? '-' }}</td>
+                    <td>{{ $s->anggota->sekolah->nama_sekolah ?? '-' }}</td>
+                    <td>{{ \Carbon\Carbon::parse($s->tgl_simpanan)->format('d-m-Y') }}</td>
+                    <td>{{ ucfirst($s->jenis_simpanan) }}</td>
+                    <td class="text-end">Rp {{ number_format($s->jumlah_simpanan, 0, ',', '.') }}</td>
                 </tr>
-            @endforeach
+            @empty
+                <tr>
+                    <td colspan="7" style="text-align:center;">Tidak ada data simpanan</td>
+                </tr>
+            @endforelse
         </tbody>
+
+        @if ($simpanan->count() > 0)
+            <tfoot>
+                <tr>
+                    <th colspan="6" class="text-end">Total Simpanan</th>
+                    <th class="text-end">
+                        Rp {{ number_format($simpanan->sum('jumlah_simpanan'), 0, ',', '.') }}
+                    </th>
+                </tr>
+            </tfoot>
+        @endif
+
     </table>
+
 </body>
 
 </html>

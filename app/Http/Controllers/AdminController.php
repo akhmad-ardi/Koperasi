@@ -352,7 +352,9 @@ class AdminController extends Controller
 
     public function HalamanDetailSimpanan(string $id_anggota)
     {
-        $anggota = Anggota::where('id', '=', $id_anggota)->first();
+        $anggota = Anggota::with('sekolah')
+            ->where('id', $id_anggota)
+            ->first();
 
         $total_simpanan_pokok = $anggota->simpanan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_simpanan');
         $total_simpanan_wajib = $anggota->simpanan->where('jenis_simpanan', '=', 'wajib')->sum('jumlah_simpanan');
@@ -468,7 +470,9 @@ class AdminController extends Controller
 
     public function HalamanDetailPinjaman(string $id_anggota)
     {
-        $anggota = Anggota::where('id', '=', $id_anggota)->first();
+        $anggota = Anggota::with(['sekolah', 'pinjaman', 'angsuran'])
+            ->findOrFail($id_anggota);
+
         $total_pinjaman = $anggota->pinjaman->sum('jumlah_pinjaman');
         $jumlah_angsuran = $anggota->angsuran->sum('jumlah_angsuran');
 
@@ -680,7 +684,9 @@ class AdminController extends Controller
 
     public function HalamanDetailPenarikan(string $id_anggota)
     {
-        $anggota = Anggota::where('id', '=', $id_anggota)->first();
+        $anggota = Anggota::with('sekolah')
+            ->where('id', $id_anggota)
+            ->first();
 
         // total per jenis
         $penarikan_pokok = $anggota->penarikan->where('jenis_simpanan', '=', 'pokok')->sum('jumlah_penarikan');
@@ -825,79 +831,96 @@ class AdminController extends Controller
             ->with('msg_success', 'Berhasil menghapus data');
     }
 
-    public function HalamanLaporanSimpanan()
+    public function HalamanLaporanSimpanan(Request $request)
     {
-        $anggota = Anggota::with(['simpanan', 'penarikan', 'sekolah'])->get();
+        $query = Simpanan::with(['anggota.sekolah']);
 
-        // hitung saldo akhir per anggota
-        $anggota->map(function ($a) {
-            $simpanan = $a->simpanan->sum('jumlah_simpanan');
-            $penarikan = $a->penarikan->sum('jumlah_penarikan');
-            $a->saldo = Helper::stringToRupiah($simpanan - $penarikan);
-            $a->jumlah_simpanan = Helper::stringToRupiah($simpanan);
-            $a->jumlah_penarikan = Helper::stringToRupiah($penarikan);
-            return $a;
-        });
+        // filter tanggal jika ada input
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tgl_simpanan', [$request->start_date, $request->end_date]);
+        }
+
+        $simpanan = $query->orderBy('tgl_simpanan', 'asc')->get();
 
         return view('pages.laporan-simpanan', [
-            'anggota' => $anggota
+            'simpanan' => $simpanan,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
         ]);
     }
 
-    public function LaporanSimpananPDF()
+    public function LaporanSimpananPDF(Request $request)
     {
-        $anggota = Anggota::with(['simpanan', 'penarikan', 'sekolah'])->get();
+        $query = Simpanan::with(['anggota.sekolah']);
 
-        // hitung saldo akhir per anggota
-        $anggota->map(function ($a) {
-            $simpanan = $a->simpanan->sum('jumlah_simpanan');
-            $penarikan = $a->penarikan->sum('jumlah_penarikan');
-            $a->saldo = $simpanan - $penarikan;
-            return $a;
-        });
+        // filter tanggal jika ada input
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tgl_simpanan', [$request->start_date, $request->end_date]);
+        }
 
-        $pdf = Pdf::loadView('laporan.simpanan', compact('anggota'))
+        $simpanan = $query->orderBy('tgl_simpanan', 'asc')->get();
+
+        $pdf = Pdf::loadView('laporan.simpanan', [
+            'simpanan' => $simpanan,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+        ])
+
             ->setPaper('a4', 'landscape');
-
         return $pdf->download('laporan-simpanan.pdf');
     }
 
-    public function HalamanLaporanPinjaman()
+    public function HalamanLaporanPinjaman(Request $request)
     {
-        $anggota = Anggota::with(['pinjaman', 'angsuran', 'sekolah'])->get()->map(function ($a) {
-            $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
-            $pokokAngsuran = $a->angsuran->sum('jumlah_angsuran');
-            $jasaAngsuran = $a->angsuran->sum('jasa'); // AMBIL DARI DATABASE LANGSUNG
-            $totalAngsuran = $pokokAngsuran + $jasaAngsuran;
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
 
-            $a->total_pinjaman = (float) $totalPinjaman;
-            $a->total_angsuran = (float) $totalAngsuran;
-            $a->total_pokok = (float) $pokokAngsuran;
-            $a->total_jasa = (float) $jasaAngsuran;
-            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $pokokAngsuran;
+        $anggota = Anggota::with([
+            'pinjaman',
+            'angsuran' => function ($q) use ($startDate, $endDate) {
+                $q->orderBy('tgl_angsuran', 'asc');
+                if ($startDate && $endDate) {
+                    $q->whereBetween('tgl_angsuran', [$startDate, $endDate]);
+                }
+            },
+            'sekolah'
+        ])->get();
 
-            return $a;
-        });
+        // Hitung sisa pinjaman per angsuran
+        foreach ($anggota as $a) {
+            $sisa = $a->pinjaman->sum('jumlah_pinjaman');
+            foreach ($a->angsuran as $angsuran) {
+                $angsuran->sisa_pinjaman = max(0, $sisa - $angsuran->jumlah_angsuran);
+                $sisa -= $angsuran->jumlah_angsuran;
+            }
+        }
 
         return view('pages.laporan-pinjaman', compact('anggota'));
     }
 
-    public function LaporanPinjaman()
+    public function LaporanPinjaman(Request $request)
     {
-        $anggota = Anggota::with(['pinjaman', 'angsuran', 'sekolah'])->get()->map(function ($a) {
-            $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
-            $pokokAngsuran = $a->angsuran->sum('jumlah_angsuran');
-            $jasaAngsuran = $a->angsuran->sum('jasa');
-            $totalAngsuran = $pokokAngsuran + $jasaAngsuran;
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
 
-            $a->total_pinjaman = (float) $totalPinjaman;
-            $a->total_angsuran = (float) $totalAngsuran;
-            $a->total_pokok = (float) $pokokAngsuran;
-            $a->total_jasa = (float) $jasaAngsuran;
-            $a->sisa_pinjaman = (float) $totalPinjaman - (float) $pokokAngsuran;
+        $anggota = Anggota::with([
+            'pinjaman',
+            'angsuran' => function ($q) use ($startDate, $endDate) {
+                $q->orderBy('tgl_angsuran', 'asc');
+                if ($startDate && $endDate) {
+                    $q->whereBetween('tgl_angsuran', [$startDate, $endDate]);
+                }
+            },
+            'sekolah'
+        ])->get();
 
-            return $a;
-        });
+        foreach ($anggota as $a) {
+            $sisa = $a->pinjaman->sum('jumlah_pinjaman');
+            foreach ($a->angsuran as $angsuran) {
+                $angsuran->sisa_pinjaman = max(0, $sisa - $angsuran->jumlah_angsuran);
+                $sisa -= $angsuran->jumlah_angsuran;
+            }
+        }
 
         $pdf = Pdf::loadView('laporan.pinjaman', compact('anggota'))
             ->setPaper('a4', 'landscape');
@@ -906,29 +929,35 @@ class AdminController extends Controller
     }
 
 
-
-    public function HalamanLaporanPenarikan()
+    // Tampilkan halaman penarikan + filter
+    public function HalamanLaporanPenarikan(Request $request)
     {
-        $anggota = Anggota::with('penarikan', 'sekolah')->get()->map(function ($a) {
-            $totalPenarikan = (float) $a->penarikan->sum('jumlah_penarikan');
-            $a->total_penarikan = $totalPenarikan;
-            return $a;
-        });
+        // Ambil data penarikan dengan relasi anggota & sekolah
+        $penarikan = Penarikan::with(['anggota', 'anggota.sekolah'])
+            ->when($request->start_date && $request->end_date, function ($query) use ($request) {
+                $query->whereBetween('tgl_penarikan', [$request->start_date, $request->end_date]);
+            })
+            ->get();
 
-        return view('pages.laporan-penarikan', [
-            'anggota' => $anggota
-        ]);
+        // Ambil tanggal untuk input form
+        $start_date = $request->start_date ?? '';
+        $end_date = $request->end_date ?? '';
+
+        return view('pages.laporan-penarikan', compact('penarikan', 'start_date', 'end_date'));
     }
 
-    public function LaporanPenarikan()
+    public function LaporanPenarikan(Request $request)
     {
-        $anggota = Anggota::with('penarikan', 'sekolah')->get()->map(function ($a) {
-            $totalPenarikan = (float) $a->penarikan->sum('jumlah_penarikan');
-            $a->total_penarikan = $totalPenarikan;
-            return $a;
-        });
+        $penarikan = Penarikan::with(['anggota', 'anggota.sekolah'])
+            ->when($request->start_date && $request->end_date, function ($query) use ($request) {
+                $query->whereBetween('tgl_penarikan', [$request->start_date, $request->end_date]);
+            })
+            ->get();
 
-        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('laporan.penarikan', compact('anggota'))
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView(
+            'laporan.penarikan',  // pastikan ini view khusus PDF penarikan
+            compact('penarikan')
+        )
             ->setPaper('a4', 'landscape');
 
         return $pdf->download('laporan-penarikan.pdf');

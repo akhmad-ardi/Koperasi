@@ -7,71 +7,98 @@
     <style>
         body {
             font-family: sans-serif;
-            font-size: 12px;
+            font-size: 11px;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
         }
 
         table {
             border-collapse: collapse;
             width: 100%;
-            margin-top: 20px;
         }
 
         th,
         td {
             border: 1px solid #000;
-            padding: 6px;
-            vertical-align: middle;
+            padding: 5px;
             white-space: nowrap;
-            /* biar tidak turun baris */
         }
 
         th {
             background: #f2f2f2;
             text-align: center;
-            /* judul kolom rata tengah */
         }
 
         td {
             text-align: left;
-            /* isi data rata kiri */
         }
     </style>
 </head>
 
 <body>
-    <h2 style="text-align: center">Laporan Pinjaman Anggota</h2>
-    <table border="1" cellpadding="5" cellspacing="0" width="100%">
+    <h2>Laporan Pinjaman Anggota</h2>
+    <table>
         <thead>
             <tr>
                 <th>No.</th>
                 <th>No. Anggota</th>
                 <th>Nama Anggota</th>
                 <th>Sekolah</th>
-                <th>Total Pinjaman</th>
-                <th>Total Angsuran Pokok</th>
-                <th>Total Jasa</th>
+                <th>Jumlah Pinjaman</th>
+                <th>Tanggal Angsuran</th>
+                <th>Angsuran Pokok</th>
+                <th>Jasa</th>
                 <th>Total Angsuran</th>
                 <th>Sisa Pinjaman</th>
             </tr>
         </thead>
         <tbody>
+            @php
+                $no = 1;
+                $totalPokok = 0;
+                $totalJasa = 0;
+                $totalAngsuran = 0;
+                $totalSisa = 0;
+            @endphp
             @foreach ($anggota as $a)
-                <tr>
-                    <td>{{ $loop->iteration }}</td>
-                    <td>{{ $a->no_anggota }}</td>
-                    <td>{{ $a->nama }}</td>
-                    <td>{{ $a->sekolah->nama_sekolah ?? '-' }}</td>
-                    <td>Rp {{ number_format($a->total_pinjaman, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->angsuran->sum('jasa'), 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->total_angsuran, 0, ',', '.') }}</td>
-                    <td>Rp {{ number_format($a->sisa_pinjaman, 0, ',', '.') }}</td>
-                </tr>
+                @php
+                    $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
+                @endphp
+                @foreach ($a->angsuran as $angsuran)
+                    @php
+                        $totalPokok += $angsuran->jumlah_angsuran;
+                        $totalJasa += $angsuran->jasa;
+                        $totalAngsuran += $angsuran->jumlah_angsuran + $angsuran->jasa;
+                        $totalSisa += $angsuran->sisa_pinjaman;
+                    @endphp
+                    <tr>
+                        <td>{{ $no++ }}</td>
+                        <td>{{ $a->no_anggota }}</td>
+                        <td>{{ $a->nama }}</td>
+                        <td>{{ $a->sekolah->nama_sekolah ?? '-' }}</td>
+                        <td>Rp {{ number_format($totalPinjaman, 0, ',', '.') }}</td>
+                        <td>{{ \Carbon\Carbon::parse($angsuran->tgl_angsuran)->format('d-m-Y') }}</td>
+                        <td>Rp {{ number_format($angsuran->jumlah_angsuran, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($angsuran->jasa, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($angsuran->jumlah_angsuran + $angsuran->jasa, 0, ',', '.') }}</td>
+                        <td>Rp {{ number_format($angsuran->sisa_pinjaman, 0, ',', '.') }}</td>
+                    </tr>
+                @endforeach
             @endforeach
         </tbody>
-
+        <tfoot>
+            <tr>
+                <th colspan="6" style="text-align:center">TOTAL</th>
+                <th>Rp {{ number_format($totalPokok, 0, ',', '.') }}</th>
+                <th>Rp {{ number_format($totalJasa, 0, ',', '.') }}</th>
+                <th>Rp {{ number_format($totalAngsuran, 0, ',', '.') }}</th>
+                <th>Rp {{ number_format($totalSisa, 0, ',', '.') }}</th>
+            </tr>
+        </tfoot>
     </table>
-
 </body>
 
 </html>
