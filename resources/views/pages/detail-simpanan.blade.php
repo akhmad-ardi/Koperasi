@@ -27,6 +27,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <x-adminlte-input name="sekolah" label="Sekolah" type="text" placeholder="Sekolah"
+                            value="{{ $anggota->sekolah->nama_sekolah ?? '-' }}" disabled />
+                    </div>
+
+                    <div class="mb-3">
                         <x-adminlte-input name="simpanan_pokok" label="Total Simpanan Pokok" type="text"
                             placeholder="Total Simpanan Pokok" value="{{ $simpanan_pokok }}" disabled />
                     </div>
@@ -69,7 +74,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <table id="anggotaTable" class="table table-bordered table-striped">
+                    <table id="anggotaTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th class="text-center">Nomor</th>
@@ -84,7 +89,7 @@
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $s->tgl_simpanan_dmy }}</td>
-                                    <td>{{ $s->jenis_simpanan }}</td>
+                                    <td>{{ ucfirst($s->jenis_simpanan) }}</td>
                                     <td>{{ $s->jumlah_simpanan }}</td>
                                     <td class="text-center">
                                         {{-- Edit --}}

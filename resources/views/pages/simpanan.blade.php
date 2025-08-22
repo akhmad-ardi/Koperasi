@@ -36,15 +36,15 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <table id="anggotaTable" class="table table-bordered table-striped">
+                    <table id="anggotaTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th class="text-center">Nomor</th>
                                 <th class="text-center">No. Anggota</th>
                                 <th class="text-center">Nama</th>
-                                <th class="text-center">Saldo Pokok</th>
-                                <th class="text-center">Saldo Wajib</th>
-                                <th class="text-center">Saldo Sukarela</th>
+                                <th class="text-center">Total Simpanan Pokok</th>
+                                <th class="text-center">Total Simpanan Wajib</th>
+                                <th class="text-center">Total Simpanan Sukarela</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>

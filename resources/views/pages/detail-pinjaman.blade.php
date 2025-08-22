@@ -27,6 +27,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <x-adminlte-input name="sekolah" label="Sekolah" type="text" placeholder="Sekolah"
+                            value="{{ $anggota->sekolah->nama_sekolah ?? '-' }}" disabled />
+                    </div>
+
+                    <div class="mb-3">
                         <x-adminlte-input name="status" label="Status Pinjaman" type="text" class="text-capitalize"
                             placeholder="Status Pinjaman" value="{{ $total_pinjaman == 'Rp 0' ? 'lunas' : 'belum lunas' }}"
                             disabled />
@@ -66,7 +71,7 @@
 
             <div class="card">
                 <div class="card-body">
-                    <table id="anggotaTable" class="table table-bordered table-striped">
+                    <table id="anggotaTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th class="text-center">Nomor</th>
@@ -153,6 +158,15 @@
                                 </tr>
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="text-center">Jumlah</th>
+                                <th>
+                                    Rp {{ number_format($anggota->pinjaman->sum('jumlah_pinjaman'), 0, ',', '.') }}
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -164,7 +178,7 @@
             <h3 class="text-center">Angsuran</h3>
             <div class="card">
                 <div class="card-body">
-                    <table id="anggotaTable" class="table table-bordered table-striped">
+                    <table id="anggotaTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th class="text-center">Nomor</th>
@@ -276,6 +290,21 @@
                                 </tr>
                             @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3" class="text-center">Jumlah</th>
+                                <th>
+                                    Rp {{ number_format($anggota->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}
+                                </th>
+                                <th>
+                                    Rp {{ number_format($anggota->angsuran->sum('jasa'), 0, ',', '.') }}
+                                </th>
+                                <th>
+                                    Rp {{ number_format($anggota->angsuran->sum('total_angsuran'), 0, ',', '.') }}
+                                </th>
+                                <th></th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>

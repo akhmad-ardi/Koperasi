@@ -30,7 +30,7 @@
                         </div>
 
                         <div class="mb-3">
-                            <x-adminlte-input name="nama" label="Nama Anggota" type="text" placeholder="Nama Anggta"
+                            <x-adminlte-input name="nama" label="Nama Anggota" type="text" placeholder="Nama Anggota"
                                 disabled value="{{ old('nama') }}" />
                         </div>
 

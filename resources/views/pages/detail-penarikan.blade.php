@@ -27,6 +27,11 @@
                     </div>
 
                     <div class="mb-3">
+                        <x-adminlte-input name="sekolah" label="Sekolah" type="text" placeholder="Sekolah"
+                            value="{{ $anggota->sekolah->nama_sekolah ?? '-' }}" disabled />
+                    </div>
+
+                    <div class="mb-3">
                         <x-adminlte-input name="penarikan_pokok" label="Total Penarikan Pokok" type="text"
                             placeholder="Total Penarikan Pokok" value="{{ $penarikan_pokok }}" disabled />
                     </div>
@@ -64,13 +69,13 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <table id="anggotaTable" class="table table-bordered table-striped">
+                    <table id="anggotaTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th class="text-center">Nomor</th>
-                                <th class="text-center">Tanggal Simpanan</th>
+                                <th class="text-center">Tanggal Penarikan</th>
                                 <th class="text-center">Jenis Simpanan</th>
-                                <th class="text-center">Jumlah Simpanan</th>
+                                <th class="text-center">Jumlah Penarikan</th>
                                 <th class="text-center">Aksi</th>
                             </tr>
                         </thead>

@@ -24,7 +24,7 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
-                    <table id="anggotaTable" class="table table-bordered table-striped">
+                    <table id="anggotaTable" class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>No.</th>
