@@ -53,6 +53,7 @@
                 <th>Jasa</th>
                 <th>Total Angsuran</th>
                 <th>Sisa Pinjaman</th>
+                <th>Status Pinjaman</th>
             </tr>
         </thead>
         <tbody>
@@ -73,6 +74,7 @@
                         $totalJasa += $angsuran->jasa;
                         $totalAngsuran += $angsuran->jumlah_angsuran + $angsuran->jasa;
                         $totalSisa += $angsuran->sisa_pinjaman;
+                        $status = $angsuran->sisa_pinjaman > 0 ? 'Belum Lunas' : 'Lunas';
                     @endphp
                     <tr>
                         <td>{{ $no++ }}</td>
@@ -85,6 +87,15 @@
                         <td>Rp {{ number_format($angsuran->jasa, 0, ',', '.') }}</td>
                         <td>Rp {{ number_format($angsuran->jumlah_angsuran + $angsuran->jasa, 0, ',', '.') }}</td>
                         <td>Rp {{ number_format($angsuran->sisa_pinjaman, 0, ',', '.') }}</td>
+                        <td>
+                            <span
+                                style="background-color: {{ $status == 'Lunas' ? 'rgb(40,167,69)' : 'rgb(220,53,69)' }};
+                                         color: rgb(255,255,255); padding: 3px 6px; border-radius: 4px;">
+                                {{ $status }}
+                            </span>
+                        </td>
+
+
                     </tr>
                 @endforeach
             @endforeach
@@ -96,6 +107,7 @@
                 <th>Rp {{ number_format($totalJasa, 0, ',', '.') }}</th>
                 <th>Rp {{ number_format($totalAngsuran, 0, ',', '.') }}</th>
                 <th>Rp {{ number_format($totalSisa, 0, ',', '.') }}</th>
+                <th>-</th>
             </tr>
         </tfoot>
     </table>
