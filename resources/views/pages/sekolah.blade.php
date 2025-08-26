@@ -16,7 +16,7 @@
             @if (Auth::user()->role == 'admin')
                 <a href="{{ route('admin.tambah-sekolah') }}" class="btn btn-primary">
                     <i class="fas fa-fw fa-plus"></i>
-                    Tambah Anggota
+                    Tambah Sekolah
                 </a>
             @endif
         </div>
