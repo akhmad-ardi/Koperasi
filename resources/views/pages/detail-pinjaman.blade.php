@@ -77,7 +77,7 @@
                             @foreach ($pinjaman->angsuran as $a)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $a->angsuran_ke }}</td>
+                                    <td class="text-center">{{ $a->angsuran_ke }} / {{ count($pinjaman->angsuran) }}</td>
                                     <td>{{ $a->tgl_angsuran }}</td>
                                     <td>{{ $a->jumlah_angsuran_rupiah }}</td>
                                     <td>{{ $a->jasa_rupiah }}</td>
