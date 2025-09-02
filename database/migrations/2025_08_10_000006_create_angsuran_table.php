@@ -12,14 +12,14 @@ return new class extends Migration {
     {
         Schema::create('angsuran', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_anggota');
+            $table->unsignedBigInteger('id_pinjaman');
             $table->integer('angsuran_ke');
             $table->date('tgl_angsuran');
             $table->integer('jumlah_angsuran');
             $table->integer('jasa');
             $table->integer('total_angsuran');
 
-            $table->foreign('id_anggota')->references('id')->on('anggota')->onDelete('cascade');
+            $table->foreign('id_pinjaman')->references('id')->on('pinjaman')->onDelete('cascade');
         });
     }
 

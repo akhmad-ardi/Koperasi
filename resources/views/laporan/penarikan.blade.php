@@ -10,6 +10,45 @@
             font-size: 12px;
         }
 
+        .kop-surat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .kop-surat .logo {
+            position: absolute;
+            left: 0;
+        }
+
+        .kop-surat img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .kop-text {
+            margin: 0 auto;
+        }
+
+        .kop-text h1 {
+            margin: 0;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .kop-text p {
+            margin: 2px 0;
+            font-size: 11px;
+        }
+
+        hr {
+            border: 1px solid #000;
+            margin-top: 5px;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -22,27 +61,39 @@
             padding: 6px;
             vertical-align: middle;
             white-space: nowrap;
-            /* biar tidak turun baris */
         }
 
         th {
             background: #f2f2f2;
             text-align: center;
-            /* judul kolom rata tengah */
         }
 
         td {
             text-align: left;
-            /* isi data rata kiri */
         }
     </style>
 </head>
 
 <body>
+    <!-- Kop Surat -->
+    <div class="kop-surat">
+        <div class="logo">
+            <img src="{{ public_path('logo-koperasi.png') }}" alt="Logo Koperasi">
+        </div>
+        <div class="kop-text">
+            <h1>KOPERASI SIMPAN PINJAM MAKMUR</h1>
+            <p>Jl. Merdeka No. 123, Jakarta</p>
+            <p>Telp: (021) 123456 | Email: info@koperasi.com</p>
+        </div>
+    </div>
+    <hr>
+
+    <!-- Judul Laporan -->
     <h2 style="text-align:center;">Laporan Penarikan Anggota</h2>
 
+    <!-- Tabel Data -->
     <table>
-        <thead class="text-center">
+        <thead>
             <tr>
                 <th>No</th>
                 <th>No. Anggota</th>
@@ -82,8 +133,6 @@
             </tfoot>
         @endif
     </table>
-
-
 </body>
 
 </html>

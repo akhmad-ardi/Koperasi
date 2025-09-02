@@ -10,6 +10,40 @@
             font-size: 12px;
         }
 
+        .kop-surat {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .kop-surat .logo {
+            position: absolute;
+            left: 0;
+        }
+
+        .kop-surat img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .kop-text {
+            margin: 0 auto;
+        }
+
+        .kop-text h1 {
+            margin: 0;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        .kop-text p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+
         table {
             border-collapse: collapse;
             width: 100%;
@@ -22,24 +56,34 @@
             padding: 6px;
             vertical-align: middle;
             white-space: nowrap;
-            /* biar tidak turun baris */
         }
 
         th {
             background: #f2f2f2;
             text-align: center;
-            /* judul kolom rata tengah */
         }
 
         td {
             text-align: left;
-            /* isi data rata kiri */
         }
     </style>
 </head>
 
 <body>
+    <div class="kop-surat">
+        <div class="logo">
+            <img src="{{ public_path('logo-koperasi.png') }}" alt="Logo">
+        </div>
+        <div class="kop-text">
+            <h1>KOPERASI SIMPAN PINJAM MAKMUR</h1>
+            <p>Jl. Merdeka No. 123, Jakarta</p>
+            <p>Telp: (021) 123456 | Email: info@koperasi.com</p>
+        </div>
+    </div>
+    <hr>
+
     <h2 style="text-align:center;">Laporan Simpanan Anggota</h2>
+
     <table class="table table-bordered">
         <thead class="text-center">
             <tr>
@@ -80,9 +124,7 @@
                 </tr>
             </tfoot>
         @endif
-
     </table>
-
 </body>
 
 </html>

@@ -2,7 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SekolahController;
+use App\Http\Controllers\AnggotaController;
+use App\Http\Controllers\SimpananController;
+use App\Http\Controllers\PinjamanController;
+use App\Http\Controllers\AngsuranController;
+use App\Http\Controllers\PenarikanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Middleware\AuthMiddleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\LoginMiddleware;
@@ -31,83 +38,92 @@ Route::prefix("admin")
             return redirect()->route('admin.dashboard');
         });
 
-        Route::get("/dashboard", [AdminController::class, "HalamanDashboard"])->name("admin.dashboard");
+        Route::get("/dashboard", [DashboardController::class, "HalamanDashboard"])->name("admin.dashboard");
 
         /**
          * Sekolah
          */
         Route::prefix("sekolah")->group(function () {
-            Route::get("", [AdminController::class, "HalamanSekolah"])->name("admin.sekolah");
+            Route::get("", [SekolahController::class, "HalamanSekolah"])->name("admin.sekolah");
 
-            Route::get("/tambah", [AdminController::class, "HalamanTambahSekolah"])->name("admin.tambah-sekolah");
-            Route::post('/tambah', [AdminController::class, 'TambahSekolah'])->name('post.tambah-sekolah');
+            Route::get("/tambah", [SekolahController::class, "HalamanTambahSekolah"])->name("admin.tambah-sekolah");
+            Route::post('/tambah', [SekolahController::class, 'TambahSekolah'])->name('post.tambah-sekolah');
 
-            Route::put("/edit/{id}", [AdminController::class, 'EditSekolah'])->name('put.edit-sekolah');
-            Route::delete("/hapus/{id}", [AdminController::class, 'HapusSekolah'])->name('delete.hapus-sekolah');
+            Route::put("/edit/{id}", [SekolahController::class, 'EditSekolah'])->name('put.edit-sekolah');
+            Route::delete("/hapus/{id}", [SekolahController::class, 'HapusSekolah'])->name('delete.hapus-sekolah');
         })->middleware(AdminMiddleware::class);
 
         /**
          * Anggota
          */
         Route::prefix("anggota")->group(function () {
-            Route::get("", [AdminController::class, "HalamanAnggota"])->name("admin.anggota");
+            Route::get("", [AnggotaController::class, "HalamanAnggota"])->name("admin.anggota");
 
-            Route::get("/detail/{id_anggota}", [AdminController::class, "HalamanDetailAnggota"])->name("admin.detail-anggota");
+            Route::get("/detail/{id_anggota}", [AnggotaController::class, "HalamanDetailAnggota"])->name("admin.detail-anggota");
 
-            Route::get("/tambah", [AdminController::class, "HalamanTambahAnggota"])->name("admin.tambah-anggota");
-            Route::post('/tambah', [AdminController::class, 'TambahAnggota'])->name('post.tambah-anggota');
+            Route::get("/tambah", [AnggotaController::class, "HalamanTambahAnggota"])->name("admin.tambah-anggota");
+            Route::post('/tambah', [AnggotaController::class, 'TambahAnggota'])->name('post.tambah-anggota');
 
-            Route::get("/edit/{id_anggota}", [AdminController::class, "HalamanEditAnggota"])->name("admin.edit-anggota");
-            Route::put("/edit/{id_anggota}", [AdminController::class, "EditAnggota"])->name("put.edit-anggota");
+            Route::get("/edit/{id_anggota}", [AnggotaController::class, "HalamanEditAnggota"])->name("admin.edit-anggota");
+            Route::put("/edit/{id_anggota}", [AnggotaController::class, "EditAnggota"])->name("put.edit-anggota");
 
-            Route::delete("/hapus/{id_anggota}", [AdminController::class, "HapusAnggota"])->name("delete.hapus-anggota");
+            Route::delete("/hapus/{id_anggota}", [AnggotaController::class, "HapusAnggota"])->name("delete.hapus-anggota");
         })->middleware(AdminMiddleware::class);
 
         /**
          * Simpanan
          */
         Route::prefix("simpanan")->group(function () {
-            Route::get("", [AdminController::class, "HalamanSimpanan"])->name("admin.simpanan");
+            Route::get("", [SimpananController::class, "HalamanSimpanan"])->name("admin.simpanan");
 
-            Route::get("/detail/{id_anggota}", [AdminController::class, "HalamanDetailSimpanan"])->name("admin.detail-simpanan");
+            Route::get("/detail/{id_anggota}", [SimpananController::class, "HalamanDetailSimpanan"])->name("admin.detail-simpanan");
 
-            Route::get("/tambah", [AdminController::class, "HalamanTambahSimpanan"])->name("admin.tambah-simpanan");
-            Route::post('/tambah', [AdminController::class, 'TambahSimpanan'])->name('post.tambah-simpanan');
-            Route::put("/edit/{id_simpanan}", [AdminController::class, "EditSimpanan"])->name("put.edit-simpanan");
-            Route::delete("/hapus/{id_simpanan}", [AdminController::class, "HapusSimpanan"])->name('delete.hapus-simpanan');
+            Route::get("/tambah", [SimpananController::class, "HalamanTambahSimpanan"])->name("admin.tambah-simpanan");
+            Route::post('/tambah', [SimpananController::class, 'TambahSimpanan'])->name('post.tambah-simpanan');
+
+            Route::put("/edit/{id_simpanan}", [SimpananController::class, "EditSimpanan"])->name("put.edit-simpanan");
+            Route::delete("/hapus/{id_simpanan}", [SimpananController::class, "HapusSimpanan"])->name('delete.hapus-simpanan');
         })->middleware(AdminMiddleware::class);
 
         /**
          * Pinjaman
          */
         Route::prefix("pinjaman")->group(function () {
-            Route::get("", [AdminController::class, "HalamanPinjaman"])->name("admin.pinjaman");
+            Route::get("", [PinjamanController::class, "HalamanPinjaman"])->name("admin.pinjaman");
 
-            Route::get("/detail/{id_anggota}", [AdminController::class, "HalamanDetailPinjaman"])->name("admin.detail-pinjaman");
+            Route::get("/detail/{id_anggota}", [PinjamanController::class, "HalamanDaftarPinjamanAnggota"])->name("admin.daftar-pinjaman-anggota");
 
-            Route::get("/tambah", [AdminController::class, "HalamanTambahPinjaman"])->name("admin.tambah-pinjaman");
-            Route::post('/tambah', [AdminController::class, 'TambahPinjaman'])->name('post.tambah-pinjaman');
-            Route::put("/edit/{id_pinjaman}", [AdminController::class, "EditPinjaman"])->name("put.edit-pinjaman");
-            Route::delete("/hapus/{id_pinjaman}", [AdminController::class, "HapusPinjaman"])->name("delete.hapus-pinjaman");
+            Route::get("/tambah", [PinjamanController::class, "HalamanTambahPinjaman"])->name("admin.tambah-pinjaman");
+            Route::post('/tambah', [PinjamanController::class, 'TambahPinjaman'])->name('post.tambah-pinjaman');
 
-            Route::get('/bayar-angsuran/{id_anggota}', [AdminController::class, "HalamanBayarAngsuran"])->name('admin.bayar-angsuran');
-            Route::post('/bayar-angsuran/{id_anggota}', [AdminController::class, "BayarAngsuran"])->name('post.bayar-angsuran');
-            Route::put("/edit-angsuran/{id_angsuran}", [AdminController::class, "EditAngsuran"])->name("put.edit-angsuran");
-            Route::delete("/hapus-angsuran/{id_angsuran}", [AdminController::class, "HapusAngsuran"])->name('delete.hapus-angsuran');
+            Route::get("/edit/{id_pinjaman}", [PinjamanController::class, "HalamanEditPinjaman"])->name("admin.edit-pinjaman");
+            Route::put("/edit/{id_pinjaman}", [PinjamanController::class, "EditPinjaman"])->name("put.edit-pinjaman");
+
+            Route::delete("/hapus/{id_pinjaman}", [PinjamanController::class, "HapusPinjaman"])->name("delete.hapus-pinjaman");
+
+            Route::prefix("angsuran")->group(function () {
+                Route::get("/{id_pinjaman}", [AngsuranController::class, "HalamanDetailPinjaman"])->name('admin.detail-pinjaman');
+
+                Route::get('/tambah/{id_pinjaman}', [AngsuranController::class, "HalamanTambahAngsuran"])->name('admin.tambah-angsuran');
+                Route::post('/tambah/{id_pinjaman}', [AngsuranController::class, "TambahAngsuran"])->name('post.tambah-angsuran');
+
+                Route::put("/edit/{id_angsuran}", [AngsuranController::class, "EditAngsuran"])->name("put.edit-angsuran");
+                Route::delete("/hapus-angsuran/{id_angsuran}", [AngsuranController::class, "HapusAngsuran"])->name('delete.hapus-angsuran');
+            });
         })->middleware(AdminMiddleware::class);
 
         /**
          * Penarikan
          */
         Route::prefix("penarikan")->group(function () {
-            Route::get("", [AdminController::class, "HalamanPenarikan"])->name("admin.penarikan");
+            Route::get("", [PenarikanController::class, "HalamanPenarikan"])->name("admin.penarikan");
 
-            Route::get("/detail/{id_anggota}", [AdminController::class, 'HalamanDetailPenarikan'])->name('admin.detail-penarikan');
+            Route::get("/detail/{id_anggota}", [PenarikanController::class, 'HalamanDetailPenarikan'])->name('admin.detail-penarikan');
 
-            Route::get("/tambah", [AdminController::class, "HalamanTambahPenarikan"])->name("admin.tambah-penarikan");
-            Route::post("/tambah", [AdminController::class, "TambahPenarikan"])->name("post.tambah-penarikan");
-            Route::put("/edit/{id_penarikan}", [AdminController::class, "EditPenarikan"])->name("put.edit-penarikan");
-            Route::delete("/hapus/{id_penarikan}", [AdminController::class, "HapusPenarikan"])->name('delete.hapus-penarikan');
+            Route::get("/tambah", [PenarikanController::class, "HalamanTambahPenarikan"])->name("admin.tambah-penarikan");
+            Route::post("/tambah", [PenarikanController::class, "TambahPenarikan"])->name("post.tambah-penarikan");
+            Route::put("/edit/{id_penarikan}", [PenarikanController::class, "EditPenarikan"])->name("put.edit-penarikan");
+            Route::delete("/hapus/{id_penarikan}", [PenarikanController::class, "HapusPenarikan"])->name('delete.hapus-penarikan');
         })->middleware(AdminMiddleware::class);
 
         /**
@@ -118,14 +134,14 @@ Route::prefix("admin")
                 return redirect()->route("admin.laporan.simpanan");
             });
 
-            Route::get("simpanan", [AdminController::class, 'HalamanLaporanSimpanan'])->name("admin.laporan.simpanan");
-            Route::get('/simpanan/pdf', [AdminController::class, 'LaporanSimpananPDF'])->name('laporan.simpanan.pdf');
+            Route::get("simpanan", [LaporanController::class, 'HalamanLaporanSimpanan'])->name("admin.laporan.simpanan");
+            Route::get('/simpanan/pdf', [LaporanController::class, 'LaporanSimpananPDF'])->name('laporan.simpanan.pdf');
 
-            Route::get("pinjaman", [AdminController::class, 'HalamanLaporanPinjaman'])->name("admin.laporan.pinjaman");
-            Route::get('/pinjaman/pdf', [AdminController::class, 'LaporanPinjaman'])->name('laporan.pinjaman.pdf');
+            Route::get("pinjaman", [LaporanController::class, 'HalamanLaporanPinjaman'])->name("admin.laporan.pinjaman");
+            Route::get('/pinjaman/pdf', [LaporanController::class, 'LaporanPinjaman'])->name('laporan.pinjaman.pdf');
 
-            Route::get("/penarikan", [AdminController::class, 'HalamanLaporanPenarikan'])->name("admin.laporan.penarikan");
-            Route::get("/penarikan/pdf", [AdminController::class, 'LaporanPenarikan'])->name("laporan.penarikan.pdf");
+            Route::get("/penarikan", [LaporanController::class, 'HalamanLaporanPenarikan'])->name("admin.laporan.penarikan");
+            Route::get("/penarikan/pdf", [LaporanController::class, 'LaporanPenarikan'])->name("laporan.penarikan.pdf");
         });
     });
 

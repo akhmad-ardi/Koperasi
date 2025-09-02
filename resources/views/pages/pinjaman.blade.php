@@ -57,7 +57,7 @@
                                     <td>{{ $a->status }}</td>
                                     <td class="text-center">
                                         {{-- Detail --}}
-                                        <a href="{{ route('admin.detail-pinjaman', ['id_anggota' => $a->id]) }}"
+                                        <a href="{{ route('admin.daftar-pinjaman-anggota', ['id_anggota' => $a->id]) }}"
                                             class="btn btn-info">
                                             <i class="fas fa-fw fa-user"></i>
                                             Detail

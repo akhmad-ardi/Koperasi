@@ -15,7 +15,7 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('post.bayar-angsuran', ['id_anggota' => $anggota->id]) }}" method="POST">
+                    <form action="{{ route('post.tambah-angsuran', ['id_pinjaman' => $pinjaman->id]) }}" method="POST">
                         @csrf
                         @method('POST')
                         <div class="mb-3">
@@ -44,7 +44,7 @@
                         </div>
 
                         <div class="mb-3 text-right">
-                            <a href="{{ route('admin.detail-pinjaman', ['id_anggota' => $anggota->id]) }}"
+                            <a href="{{ route('admin.detail-pinjaman', ['id_pinjaman' => $pinjaman->id]) }}"
                                 class="btn btn-outline-primary">Kembali</a>
 
                             <x-adminlte-button type="submit" theme="primary" label="Simpan" />

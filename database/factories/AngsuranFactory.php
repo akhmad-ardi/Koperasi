@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\Anggota;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Models\Pinjaman;
 
@@ -19,7 +18,7 @@ class AngsuranFactory extends Factory
     public function definition(): array
     {
         return [
-            'id_anggota' => Anggota::factory(),
+            'id_pinjaman' => Pinjaman::factory(),
             'tgl_angsuran' => $this->faker->date(),
             'jumlah_angsuran' => $this->faker->numberBetween(500000, 2000000),
             'jasa' => $this->faker->numberBetween(50000, 200000),

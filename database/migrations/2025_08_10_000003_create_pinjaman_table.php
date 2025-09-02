@@ -16,6 +16,8 @@ return new class extends Migration {
             $table->date('tgl_pinjaman');
             $table->integer('jumlah_pinjaman');
             $table->string('jaminan', 50);
+            $table->integer('tenor'); // jumlah bulan atau cicilan
+            $table->date('jatuh_tempo'); // jatuh tempo keseluruhan
 
             $table->foreign('id_anggota')->references('id')->on('anggota')->onDelete('cascade');
         });

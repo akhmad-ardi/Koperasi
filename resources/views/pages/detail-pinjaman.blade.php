@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Informasi Pinjaman')
+@section('title', 'Detail Pinjaman')
 
 @section('content_header')
-    <h1>Informasi Pinjaman</h1>
+    <h1>Detail Pinjaman</h1>
 @stop
 
 @section('content')
@@ -18,158 +18,41 @@
                 <div class="card-body">
                     <div class="mb-3">
                         <x-adminlte-input name="no_anggota" label="Nomor Anggota" type="text" placeholder="Nama Anggta"
-                            value="{{ $anggota->no_anggota }}" disabled />
+                            value="{{ $pinjaman->anggota->no_anggota }}" disabled />
                     </div>
 
                     <div class="mb-3">
                         <x-adminlte-input name="nama" label="Nama" type="text" placeholder="Nama"
-                            value="{{ $anggota->nama }}" disabled />
+                            value="{{ $pinjaman->anggota->nama }}" disabled />
                     </div>
 
                     <div class="mb-3">
                         <x-adminlte-input name="sekolah" label="Sekolah" type="text" placeholder="Sekolah"
-                            value="{{ $anggota->sekolah->nama_sekolah ?? '-' }}" disabled />
+                            value="{{ $pinjaman->anggota->sekolah->nama_sekolah ?? '-' }}" disabled />
                     </div>
 
                     <div class="mb-3">
-                        <x-adminlte-input name="status" label="Status Pinjaman" type="text" class="text-capitalize"
-                            placeholder="Status Pinjaman" value="{{ $total_pinjaman == 'Rp 0' ? 'lunas' : 'belum lunas' }}"
-                            disabled />
-                    </div>
-
-                    <div class="mb-3">
-                        <x-adminlte-input name="total_pinjaman" label="Total Pinjaman" type="text"
-                            placeholder="Total Pinjaman" value="{{ $total_pinjaman }}" disabled />
+                        <x-adminlte-input name="pinjaman" label="Pinjaman" type="text" placeholder="Sekolah"
+                            value="{{ $pinjaman->jumlah_pinjaman }}" disabled />
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row mb-3">
+    <div class="row mb-2">
         <div class="col">
-            <a href="{{ route('admin.pinjaman') }}" class="btn btn-danger">
+            <a href="{{ route('admin.daftar-pinjaman-anggota', ['id_anggota' => $pinjaman->anggota->id]) }}"
+                class="btn btn-danger">
                 <i class="fa fa-fw fa-arrow-left"></i>
                 Kembali
             </a>
             @if (Auth::user()->role == 'admin')
-                <a href="{{ route('admin.bayar-angsuran', ['id_anggota' => $anggota->id]) }}" class="btn btn-info">
+                <a href="{{ route('admin.tambah-angsuran', ['id_pinjaman' => $pinjaman->id]) }}" class="btn btn-info">
                     <i class="fa fa-fw fa-hand-holding-usd"></i>
                     Bayar Angsuran
                 </a>
-                <a href="{{ route('admin.tambah-pinjaman') }}" class="btn btn-primary">
-                    <i class="fa fa-fw fa-hand-holding-usd"></i>
-                    Tambah Pinjaman
-                </a>
             @endif
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col">
-            <h3 class="text-center">Pinjaman</h3>
-
-            <div class="card">
-                <div class="card-body">
-                    <table id="anggotaTable" class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Nomor</th>
-                                <th class="text-center">Tanggal Pinjaman</th>
-                                <th class="text-center">Jaminan</th>
-                                <th class="text-center">Jumlah Pinjaman</th>
-                                <th class="text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($anggota->pinjaman as $p)
-                                <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $p->tgl_pinjaman_dmy }}</td>
-                                    <td>{{ $p->jaminan }}</td>
-                                    <td>{{ $p->jumlah_pinjaman_rupiah }}</td>
-                                    <td class="text-center">
-                                        {{-- Edit --}}
-                                        @if (Auth::user()->role == 'admin')
-                                            <x-adminlte-button label="Edit" theme="primary" icon="fas fa-fw fa-pen"
-                                                data-toggle="modal" data-target="#modalEditPinjaman{{ $p->id }}" />
-
-                                            <x-adminlte-modal id="modalEditPinjaman{{ $p->id }}" title="Edit Data"
-                                                theme="primary" icon="fas fa-fw fa-pen" size="md" class="text-left">
-                                                <form action="{{ route('put.edit-pinjaman', ['id_pinjaman' => $p->id]) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('PUT')
-
-                                                    <div class="mb-3">
-                                                        <x-adminlte-input name="tgl_pinjaman" label="Tanggal Pinjaman"
-                                                            type="date" placeholder="Tanggal Pinjaman"
-                                                            value="{{ $p->tgl_pinjaman }}" />
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <x-adminlte-input name="jaminan" label="Jaminan" type="text"
-                                                            placeholder="Jaminan" value="{{ $p->jaminan }}" />
-                                                    </div>
-
-                                                    <div class="mb-3">
-                                                        <x-adminlte-input name="jumlah_pinjaman" label="Jumlah Pinjaman"
-                                                            type="number" placeholder="Jumlah Pinjaman"
-                                                            value="{{ $p->jumlah_pinjaman }}" />
-                                                    </div>
-
-                                                    <div class="text-right">
-                                                        <x-adminlte-button type="button" theme="outline-primary"
-                                                            label="Batal Edit" data-dismiss="modal" />
-                                                        <x-adminlte-button type="submit" theme="primary"
-                                                            icon="fas fa-fw fa-pen" label="Edit" />
-                                                    </div>
-                                                </form>
-
-                                                <x-slot name="footerSlot"></x-slot>
-                                            </x-adminlte-modal>
-
-                                            {{-- Hapus --}}
-                                            <x-adminlte-button label="Hapus" theme="danger" icon="fas fa-fw fa-trash"
-                                                data-toggle="modal"
-                                                data-target="#modalHapusPinjaman{{ $p->id }}" />
-
-                                            <x-adminlte-modal id="modalHapusPinjaman{{ $p->id }}"
-                                                title="Hapus Data Pinjaman" theme="danger" icon="fas fa-fw fa-trash"
-                                                size='md'>
-                                                <p>Apakah anda ingin menghapus data ini ?</p>
-                                                <x-slot name="footerSlot">
-                                                    <form
-                                                        action="{{ route('delete.hapus-pinjaman', ['id_pinjaman' => $p->id]) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <x-adminlte-button type="button" theme="outline-danger"
-                                                            label="Batal Hapus" data-dismiss="modal" />
-                                                        <x-adminlte-button type="submit" theme="danger"
-                                                            icon="fas fa-fw fa-trash" label="Hapus" />
-                                                    </form>
-                                                </x-slot>
-                                            </x-adminlte-modal>
-                                        @else
-                                            <i class="fas fa-ban fa-2x text-danger" title="Tidak memiliki akses"></i>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="3" class="text-center">Jumlah</th>
-                                <th>
-                                    Rp {{ number_format($anggota->pinjaman->sum('jumlah_pinjaman'), 0, ',', '.') }}
-                                </th>
-                                <th></th>
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -191,11 +74,11 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($anggota->angsuran as $a)
+                            @foreach ($pinjaman->angsuran as $a)
                                 <tr>
                                     <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $a->angsuran_ke }}</td>
-                                    <td>{{ $a->tgl_angsuran_dmy }}</td>
+                                    <td>{{ $a->tgl_angsuran }}</td>
                                     <td>{{ $a->jumlah_angsuran_rupiah }}</td>
                                     <td>{{ $a->jasa_rupiah }}</td>
                                     <td>{{ $a->total_angsuran_rupiah }}</td>
@@ -203,12 +86,10 @@
                                         {{-- Edit --}}
                                         @if (Auth::user()->role == 'admin')
                                             <x-adminlte-button label="Edit" theme="primary" icon="fas fa-fw fa-pen"
-                                                data-toggle="modal"
-                                                data-target="#modalEditAngsuran{{ $a->id }}" />
+                                                data-toggle="modal" data-target="#modalEditAngsuran{{ $a->id }}" />
 
                                             <x-adminlte-modal id="modalEditAngsuran{{ $a->id }}" title="Edit Data"
-                                                theme="primary" icon="fas fa-fw fa-pen" size="md"
-                                                class="text-left">
+                                                theme="primary" icon="fas fa-fw fa-pen" size="md" class="text-left">
                                                 <form action="{{ route('put.edit-angsuran', ['id_angsuran' => $a->id]) }}"
                                                     method="POST">
                                                     @csrf
@@ -217,8 +98,8 @@
                                                         <x-adminlte-input name="pinjaman"
                                                             id="pinjaman_{{ $a->id }}_{{ $loop->index }}"
                                                             label="Pinjaman Saat Ini" type="text"
-                                                            placeholder="Pinjaman Saat Ini" value="{{ $total_pinjaman }}"
-                                                            disabled />
+                                                            placeholder="Pinjaman Saat Ini"
+                                                            value="{{ $pinjaman->jumlah_pinjaman }}" disabled />
                                                     </div>
 
                                                     <div class="mb-3">
@@ -294,13 +175,13 @@
                             <tr>
                                 <th colspan="3" class="text-center">Jumlah</th>
                                 <th>
-                                    Rp {{ number_format($anggota->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}
+                                    Rp {{ number_format($pinjaman->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}
                                 </th>
                                 <th>
-                                    Rp {{ number_format($anggota->angsuran->sum('jasa'), 0, ',', '.') }}
+                                    Rp {{ number_format($pinjaman->angsuran->sum('jasa'), 0, ',', '.') }}
                                 </th>
                                 <th>
-                                    Rp {{ number_format($anggota->angsuran->sum('total_angsuran'), 0, ',', '.') }}
+                                    Rp {{ number_format($pinjaman->angsuran->sum('total_angsuran'), 0, ',', '.') }}
                                 </th>
                                 <th></th>
                             </tr>

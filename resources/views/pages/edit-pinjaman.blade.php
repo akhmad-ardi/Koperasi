@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', 'Tambah Pinajaman')
+@section('title', 'Edit Pinajaman')
 
 @section('content_header')
-    <h1>Tambah Data Pinjaman</h1>
+    <h1>Edit Data Pinjaman</h1>
 @stop
 
 @section('content')
@@ -15,50 +15,44 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('post.tambah-pinjaman') }}" method="POST">
+                    <form action="{{ route('put.edit-pinjaman', ['id_pinjaman' => $pinjaman->id]) }}" method="POST">
                         @csrf
-                        @method('POST')
+                        @method('PUT')
                         <div class="mb-3">
-                            <x-adminlte-select name="id_anggota" label="Nomor Anggota">
-                                <option value="" selected disabled>Pilih Anggota</option>
-                                @foreach ($anggota as $a)
-                                    <option value="{{ $a->id }}" data-nama="{{ $a->nama }}"
-                                        {{ old('id') == $a->id ? 'selected' : '' }}>
-                                        {{ $a->no_anggota }} | {{ $a->nama }}</option>
-                                @endforeach
-                            </x-adminlte-select>
+                            <x-adminlte-input name="nomor" label="Nomor Anggota" type="text"
+                                placeholder="Nomor Anggota" disabled value="{{ $pinjaman->anggota->no_anggota }}" />
                         </div>
 
                         <div class="mb-3">
                             <x-adminlte-input name="nama" label="Nama Anggota" type="text" placeholder="Nama Anggota"
-                                disabled value="{{ old('nama') }}" />
+                                disabled value="{{ $pinjaman->anggota->nama }}" />
                         </div>
 
                         <div class="mb-3">
                             <x-adminlte-input name="tgl_pinjaman" label="Tanggal Pinjaman" type="date"
-                                placeholder="Tanggal Pinjaman" value="{{ old('tgl_pinjaman') ?? date('Y-m-d') }}" />
+                                placeholder="Tanggal Pinjaman" value="{{ $pinjaman->tgl_pinjaman ?? date('Y-m-d') }}" />
                         </div>
 
                         <div class="mb-3">
                             <x-adminlte-input name="jaminan" label="Jaminan" type="text" placeholder="Jaminan"
-                                value="{{ old('jaminan') }}" />
+                                value="{{ $pinjaman->jaminan }}" />
                         </div>
 
                         <div class="mb-3">
                             <x-adminlte-input name="jumlah_pinjaman" label="Jumlah Pinjaman" type="number"
-                                placeholder="Jumlah Pinjaman" value="{{ old('jumlah_pinjaman') }}" />
+                                placeholder="Jumlah Pinjaman" value="{{ $pinjaman->jumlah_pinjaman }}" />
                         </div>
 
                         {{-- Tambahan untuk tenor --}}
                         <div class="mb-3">
                             <x-adminlte-input name="tenor" label="Tenor (Bulan)" type="number"
-                                placeholder="Tenor dalam bulan" value="{{ old('tenor') }}" />
+                                placeholder="Tenor dalam bulan" value="{{ $pinjaman->tenor }}" />
                         </div>
 
                         {{-- Tambahan untuk jatuh tempo --}}
                         <div class="mb-3">
                             <x-adminlte-input name="jatuh_tempo" label="Jatuh Tempo" type="date"
-                                placeholder="Tanggal Jatuh Tempo" value="{{ old('jatuh_tempo') }}" />
+                                placeholder="Tanggal Jatuh Tempo" value="{{ $pinjaman->jatuh_tempo }}" />
                         </div>
 
                         <div class="mb-3 text-right">
@@ -79,12 +73,6 @@
 
 @section('js')
     <script>
-        document.getElementById('id_anggota').addEventListener('change', function() {
-            let selected = this.options[this.selectedIndex];
-            let nama = selected.getAttribute('data-nama');
-            document.getElementById('nama').value = nama ?? '';
-        });
-
         document.addEventListener("DOMContentLoaded", function() {
             const tglPinjaman = document.querySelector('input[name="tgl_pinjaman"]');
             const tenor = document.querySelector('input[name="tenor"]');

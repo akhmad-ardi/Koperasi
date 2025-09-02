@@ -52,8 +52,8 @@
     <div class="row">
         <div class="col">
             <div class="card">
-                <div class="card-body">
-                    <table id="angsuranTable" class="table table-bordered">
+                <div class="card-body table-responsive">
+                    <table class="table table-bordered">
                         <thead>
                             <tr>
                                 <th>No.</th>
@@ -70,59 +70,39 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $no = 1;
-                                $totalPokok = 0;
-                                $totalJasa = 0;
-                                $totalAngsuran = 0;
-                                $totalSisa = 0;
-                            @endphp
+                            @php $no = 1; @endphp
                             @foreach ($anggota as $a)
-                                @php
-                                    $totalPinjaman = $a->pinjaman->sum('jumlah_pinjaman');
-                                @endphp
-                                @foreach ($a->angsuran as $angsuran)
+                                @foreach ($a->pinjaman as $p)
                                     @php
-                                        $totalPokok += $angsuran->jumlah_angsuran;
-                                        $totalJasa += $angsuran->jasa;
-                                        $totalAngsuran += $angsuran->jumlah_angsuran + $angsuran->jasa;
-                                        $totalSisa += $angsuran->sisa_pinjaman;
-                                        $status = $angsuran->sisa_pinjaman > 0 ? 'Belum Lunas' : 'Lunas';
+                                        $totalAngsuran = $p->angsuran->sum('total_angsuran');
+                                        $sisaPinjaman = $p->jumlah_pinjaman - $p->angsuran->sum('jumlah_angsuran');
+                                        $status = $sisaPinjaman <= 0 ? 'Lunas' : 'Belum Lunas';
                                     @endphp
+
                                     <tr>
                                         <td>{{ $no++ }}</td>
-                                        <td>{{ $a->no_anggota }}</td>
-                                        <td>{{ $a->nama }}</td>
+                                        <td>{{ $a->no_anggota ?? '-' }}</td>
+                                        <td>{{ $a->nama ?? '-' }}</td>
                                         <td>{{ $a->sekolah->nama_sekolah ?? '-' }}</td>
-                                        <td>Rp {{ number_format($totalPinjaman, 0, ',', '.') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($angsuran->tgl_angsuran)->format('d-m-Y') }}</td>
-                                        <td>Rp {{ number_format($angsuran->jumlah_angsuran, 0, ',', '.') }}</td>
-                                        <td>Rp {{ number_format($angsuran->jasa, 0, ',', '.') }}</td>
-                                        <td>Rp
-                                            {{ number_format($angsuran->jumlah_angsuran + $angsuran->jasa, 0, ',', '.') }}
-                                        </td>
-                                        <td>Rp {{ number_format($angsuran->sisa_pinjaman, 0, ',', '.') }}</td>
+                                        <td>{{ number_format($p->jumlah_pinjaman, 0, ',', '.') }}</td>
                                         <td>
-                                            <span
-                                                class="{{ $status == 'Lunas' ? 'bg-success text-white' : 'bg-danger text-white' }} px-2 py-1 rounded">
-                                                {{ $status }}
-                                            </span>
+                                            @if ($p->angsuran->isNotEmpty())
+                                                {{ $p->angsuran->last()->tgl_angsuran }}
+                                            @else
+                                                -
+                                            @endif
                                         </td>
+                                        <td>{{ number_format($p->angsuran->sum('jumlah_angsuran'), 0, ',', '.') }}</td>
+                                        <td>{{ number_format($p->angsuran->sum('jasa'), 0, ',', '.') }}</td>
+                                        <td>{{ number_format($totalAngsuran, 0, ',', '.') }}</td>
+                                        <td>{{ number_format($sisaPinjaman, 0, ',', '.') }}</td>
+                                        <td>{{ $status }}</td>
                                     </tr>
                                 @endforeach
                             @endforeach
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="6" class="text-center">TOTAL</th>
-                                <th>Rp {{ number_format($totalPokok, 0, ',', '.') }}</th>
-                                <th>Rp {{ number_format($totalJasa, 0, ',', '.') }}</th>
-                                <th>Rp {{ number_format($totalAngsuran, 0, ',', '.') }}</th>
-                                <th>Rp {{ number_format($totalSisa, 0, ',', '.') }}</th>
-                                <th>-</th>
-                            </tr>
-                        </tfoot>
                     </table>
+
                 </div>
             </div>
         </div>
