@@ -101,6 +101,8 @@ Route::prefix("admin")
 
             Route::delete("/hapus/{id_pinjaman}", [PinjamanController::class, "HapusPinjaman"])->name("delete.hapus-pinjaman");
 
+            Route::patch('/bayar-denda/{id_pinjaman}', [PinjamanController::class, 'BayarDenda'])->name('patch.bayar-denda');
+
             Route::prefix("angsuran")->group(function () {
                 Route::get("/{id_pinjaman}", [AngsuranController::class, "HalamanDetailPinjaman"])->name('admin.detail-pinjaman');
 

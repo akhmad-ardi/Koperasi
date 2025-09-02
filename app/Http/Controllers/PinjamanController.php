@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Denda;
 use Illuminate\Http\Request;
 use App\Models\Anggota;
 use App\Models\Pinjaman;
@@ -124,5 +125,18 @@ class PinjamanController extends Controller
         return redirect()
             ->route('admin.detail-pinjaman', ['id_anggota' => $pinjaman->id_anggota])
             ->with('msg_success', 'Berhasil menghapus pinjaman');
+    }
+
+    public function BayarDenda(string $id_pinjaman)
+    {
+        $denda = Denda::where('id_pinjaman', '=', $id_pinjaman)->first();
+
+        $denda->status = 'lunas';
+
+        $denda->save();
+
+        return redirect()
+            ->route('admin.daftar-pinjaman-anggota', ['id_anggota' => $denda->pinjaman->anggota->id])
+            ->with('msg_success', 'Berhasil membayar denda');
     }
 }

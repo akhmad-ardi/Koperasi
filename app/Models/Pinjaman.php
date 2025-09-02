@@ -40,20 +40,14 @@ class Pinjaman extends Model
         return $this->hasMany(Angsuran::class, 'id_pinjaman', 'id');
     }
 
+    public function denda()
+    {
+        return $this->hasMany(Denda::class, 'id_pinjaman');
+    }
+
     public function getTunggakanAttribute()
     {
         $tunggakan = (int) $this->jumlah_pinjaman - (int) $this->angsuran->sum('jumlah_angsuran');
         return max($tunggakan, 0); // minimal 0, biar tidak negatif
-    }
-
-    public function getDendaAttribute()
-    {
-        $jatuhTempo = Carbon::parse($this->jatuh_tempo);
-
-        if ($this->tunggakan > 0 && now()->gt($jatuhTempo)) {
-            return $this->tunggakan * 0.03; // 3% dari tunggakan
-        }
-
-        return 0;
     }
 }

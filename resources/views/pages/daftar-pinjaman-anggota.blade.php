@@ -66,7 +66,7 @@
             <h3 class="text-center">Pinjaman</h3>
 
             <div class="card">
-                <div class="card-body">
+                <div class="card-body table-responsive">
                     <table id="anggotaTable" class="table table-bordered">
                         <thead>
                             <tr>
@@ -88,23 +88,52 @@
                                     <td>{{ $p->jaminan }}</td>
                                     <td>{{ $p->tunggakan_rupiah }}</td>
                                     <td>
-                                        @if ($p->denda > 0)
+                                        @if (count($p->denda) && $p->denda->where('status', '=', 'belum lunas')->sum('jumlah_denda') > 0)
                                             <span class="badge badge-danger">
-                                                Rp {{ number_format($p->denda, 0, ',', '.') }}
+                                                Rp
+                                                {{ number_format($p->denda->where('status', '=', 'belum lunas')->sum('jumlah_denda'), 0, ',', '.') }}
                                             </span>
                                         @else
-                                            -
+                                            Rp 0
                                         @endif
                                     </td>
-                                    <td class="text-center">
+                                    <td class="text-center d-flex">
+                                        {{-- Bayar denda --}}
+                                        @if (count($p->denda) && $p->denda->where('status', '=', 'belum lunas')->sum('jumlah_denda') > 0)
+                                            <x-adminlte-button label="Bayar Denda" theme="warning"
+                                                icon="fas fa-fw fa-hand-holding-usd" data-toggle="modal"
+                                                data-target="#modalBayarDenda{{ $p->id }}" class="mr-1" />
+                                        @else
+                                            <x-adminlte-button label="Bayar Denda" theme="warning"
+                                                icon="fas fa-fw fa-hand-holding-usd" class="mr-1" disabled />
+                                        @endif
+
+                                        <x-adminlte-modal id="modalBayarDenda{{ $p->id }}" title="Bayar Denda"
+                                            theme="warning" icon="fas fa-fw fa-trash" size='md'>
+                                            <p>Apakah anda ingin menghapus membayar lunas denda ini?</p>
+                                            <x-slot name="footerSlot">
+                                                <form action="{{ route('patch.bayar-denda', ['id_pinjaman' => $p->id]) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <x-adminlte-button type="button" theme="outline-warning"
+                                                        label="Batal Bayar Denda" data-dismiss="modal" />
+                                                    <x-adminlte-button type="submit" theme="warning"
+                                                        icon="fas fa-fw fa-hand-holding-usd" label="Bayar" />
+                                                </form>
+                                            </x-slot>
+                                        </x-adminlte-modal>
+
+                                        {{-- Detail --}}
                                         <a href="{{ route('admin.detail-pinjaman', ['id_pinjaman' => $p->id]) }}"
-                                            class="btn btn-info">
+                                            class="mr-1 btn btn-info">
                                             <i class="fas fa-fw fa-hand-holding-usd"></i>
                                             Detail
                                         </a>
 
+                                        {{-- Edit --}}
                                         <a href="{{ route('admin.edit-pinjaman', ['id_pinjaman' => $p->id]) }}"
-                                            class="btn btn-primary">
+                                            class="mr-1 btn btn-primary">
                                             <i class="fas fa-fw fa-pen"></i>
                                             Edit
                                         </a>
@@ -136,12 +165,13 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="3" class="text-center">Jumlah</th>
+                                <th colspan="4" class="text-center">Jumlah</th>
                                 <th>
                                     {{ $total_pinjaman }}
                                 </th>
                                 <th class="text-center">
-                                    Rp {{ number_format($anggota->pinjaman->sum('denda'), 0, ',', '.') }}
+                                    Rp
+                                    {{ number_format($anggota->pinjaman->sum(fn($p) => $p->denda->where('status', '=', 'belum lunas')->sum('jumlah_denda')), 0, ',', '.') }}
                                 </th>
                                 <th></th>
                             </tr>
