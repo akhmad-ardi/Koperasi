@@ -33,7 +33,7 @@ class AngsuranController extends Controller
     {
         $pinjaman = Pinjaman::where('id', '=', $id_pinjaman)->first();
 
-        $total_pinjaman = $pinjaman->sum('jumlah_pinjaman');
+        $total_pinjaman = $pinjaman->jumlah_pinjaman;
         $total_angsuran = $pinjaman->angsuran->sum('jumlah_angsuran');
 
         return view('pages.tambah-angsuran', [
