@@ -33,13 +33,13 @@
 
                     <div class="mb-3">
                         <x-adminlte-input name="status" label="Status Pinjaman" type="text" class="text-capitalize"
-                            placeholder="Status Pinjaman" value="{{ $total_pinjaman == 'Rp 0' ? 'lunas' : 'belum lunas' }}"
-                            disabled />
+                            placeholder="Status Pinjaman"
+                            value="{{ $total_seluruh_pinjaman_angsuran == 'Rp 0' ? 'lunas' : 'belum lunas' }}" disabled />
                     </div>
 
                     <div class="mb-3">
                         <x-adminlte-input name="total_pinjaman" label="Total Pinjaman" type="text"
-                            placeholder="Total Pinjaman" value="{{ $total_pinjaman }}" disabled />
+                            placeholder="Total Pinjaman" value="{{ $total_seluruh_pinjaman_angsuran }}" disabled />
                     </div>
                 </div>
             </div>
@@ -75,6 +75,7 @@
                                 <th class="text-center">Jatuh Tempo</th>
                                 <th class="text-center">Jaminan</th>
                                 <th class="text-center">Jumlah Pinjaman</th>
+                                <th class="text-center">Sisa Pinjaman</th>
                                 <th class="text-center">Denda</th> {{-- Tambahan --}}
                                 <th class="text-center">Aksi</th>
                             </tr>
@@ -86,6 +87,7 @@
                                     <td class="text-center">{{ $p->tgl_pinjaman }}</td>
                                     <td class="text-center">{{ $p->jatuh_tempo }}</td>
                                     <td>{{ $p->jaminan }}</td>
+                                    <td>{{ $p->jumlah_pinjaman_rupiah }}</td>
                                     <td>{{ $p->tunggakan_rupiah }}</td>
                                     <td>
                                         @if (count($p->denda) && $p->denda->where('status', '=', 'belum lunas')->sum('jumlah_denda') > 0)
@@ -166,9 +168,8 @@
                         <tfoot>
                             <tr>
                                 <th colspan="4" class="text-center">Jumlah</th>
-                                <th>
-                                    {{ $total_pinjaman }}
-                                </th>
+                                <th>{{ $total_seluruh_pinjaman }}</th>
+                                <th>{{ $total_seluruh_pinjaman_angsuran }}</th>
                                 <th class="text-center">
                                     Rp
                                     {{ number_format($anggota->pinjaman->sum(fn($p) => $p->denda->where('status', '=', 'belum lunas')->sum('jumlah_denda')), 0, ',', '.') }}

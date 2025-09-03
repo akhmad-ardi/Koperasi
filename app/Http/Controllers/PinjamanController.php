@@ -38,19 +38,23 @@ class PinjamanController extends Controller
     {
         $anggota = Anggota::where('id', '=', $id_anggota)->first();
 
-        $total_seluruh_pinjaman = $anggota->pinjaman->sum(function ($pinjaman) {
+        $total_seluruh_pinjaman_angsuran = $anggota->pinjaman->sum(function ($pinjaman) {
             return $pinjaman->jumlah_pinjaman - $pinjaman->angsuran->sum('jumlah_angsuran');
         });
+
+        $total_seluruh_pinjaman = $anggota->pinjaman->sum('jumlah_pinjaman');
 
         foreach ($anggota->pinjaman as $pinjaman) {
             $pinjaman->tgl_pinjaman = Helper::getTanggalAttribute($pinjaman->tgl_pinjaman);
             $pinjaman->jatuh_tempo = Helper::getTanggalAttribute($pinjaman->jatuh_tempo);
+            $pinjaman->jumlah_pinjaman_rupiah = Helper::stringToRupiah($pinjaman->jumlah_pinjaman);
             $pinjaman->tunggakan_rupiah = Helper::stringToRupiah($pinjaman->tunggakan);
         }
 
         return view("pages.daftar-pinjaman-anggota", [
             'anggota' => $anggota,
-            'total_pinjaman' => Helper::stringToRupiah($total_seluruh_pinjaman),
+            'total_seluruh_pinjaman_angsuran' => Helper::stringToRupiah($total_seluruh_pinjaman_angsuran),
+            'total_seluruh_pinjaman' => Helper::stringToRupiah($total_seluruh_pinjaman),
         ]);
     }
 
